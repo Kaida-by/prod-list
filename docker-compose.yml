@@ -1,0 +1,66 @@
+version: "3.9"
+
+services:
+  pgsql:
+    image: postgres:13.2-alpine
+    command: postgres -c listen_addresses=*
+    environment:
+      - TZ=UTC
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - pgdata_13_2:/var/lib/postgresql/data
+      - ./backend/db-backups/:/srv/app/db-backups
+    networks:
+      - prod-list
+    ports:
+      - ${DB_EXTERNAL_PORT}:5432
+    restart: always
+
+  php:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+      args:
+        LINUX_USER_ID: ${LINUX_USER_ID}
+    environment:
+      XDEBUG_CONFIG: client_host=${XDEBUG_REMOTE_HOST} client_port=${XDEBUG_REMOTE_PORT}
+      PHP_IDE_CONFIG: serverName=${IDE_SERVER_NAME}
+    volumes:
+      - ./docker/php/php.ini:/usr/local/etc/php/php.ini
+      - ./docker/cron/crontab:/var/spool/cron/crontabs/crontab
+      - ./backend/:/srv/app
+      - ./.env:/srv/app/.env
+    depends_on:
+      - pgsql
+    tty: true
+    networks:
+      - prod-list
+    restart: always
+
+  nginx:
+    build:
+      context: .
+      dockerfile: docker/nginx/Dockerfile
+      args:
+        NGINX_PORT: ${NGINX_BACKEND_PORT}
+    volumes:
+      - ./backend/public/:/srv/app/public
+    depends_on:
+      - php
+    ports:
+      - ${NGINX_BACKEND_PORT}:${NGINX_BACKEND_PORT}
+    networks:
+      - prod-list
+    restart: always
+
+  nuxt:
+    build:
+      context: .
+      dockerfile: docker/node/Dockerfile
+    volumes:
+      - ./frontend:/srv/app
+    ports:
+      - 8080:8080
+    command: [ "npm", "run", "dev" ]
