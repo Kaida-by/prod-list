@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\TypeProduct;
+use Exception;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -14,7 +15,7 @@ class TypeProductFactory extends Factory
      * Define the model's default state.
      *
      * @return array<string, mixed>
-     * @throws \Exception
+     * @throws Exception
      */
     public function definition(): array
     {

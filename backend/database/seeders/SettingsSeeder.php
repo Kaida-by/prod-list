@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -13,7 +12,7 @@ class SettingsSeeder extends Seeder
      */
     public function run(): void
     {
-        $settings = config('colorPalette');
+        $settings = config('color_palette');
 
         DB::table('settings')->insert($settings);
     }

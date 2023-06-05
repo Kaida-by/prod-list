@@ -2,11 +2,12 @@
 
 namespace Database\Factories;
 
+use App\Models\Phone;
 use Exception;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Phone>
+ * @extends Factory<Phone>
  */
 class PhoneFactory extends Factory
 {
