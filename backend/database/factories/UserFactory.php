@@ -22,8 +22,9 @@ class UserFactory extends Factory
     {
         return [
             'name' => fake()->name(),
-            'phone_id' => random_int(1, 3),
+            'phone' => fake()->phoneNumber,
             'color_palette_id' => random_int(1, 2),
+            'phone_verified' => true,
             'phone_verified_at' => now(),
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             'remember_token' => Str::random(10),
