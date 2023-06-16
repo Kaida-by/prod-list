@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module type="WEB_MODULE" version="4">
   <component name="NewModuleRootManager">
-    <content url="file://$MODULE_DIR$" />
+    <content url="file://$MODULE_DIR$">
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/laravel/ui" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/lcobucci/jwt" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/lcobucci/clock" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/namshi/jose" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/php-open-source-saver/jwt-auth" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/psr/clock" />
+    </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>

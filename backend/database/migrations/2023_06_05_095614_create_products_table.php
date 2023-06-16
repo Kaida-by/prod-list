@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('count');
             $table->unsignedBigInteger('count_type_id');
-            $table->unsignedBigInteger('comment_id');
+            $table->unsignedBigInteger('comment_id')->nullable();
             $table->unsignedBigInteger('product_type_id');
             $table->unsignedBigInteger('user_id');
             $table->timestamps();

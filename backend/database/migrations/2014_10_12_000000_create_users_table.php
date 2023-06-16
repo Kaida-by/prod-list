@@ -14,15 +14,15 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->unsignedBigInteger('color_palette_id');
-            $table->unsignedBigInteger('phone_id');
-            $table->timestamp('phone_verified_at')->nullable();
+            $table->unsignedBigInteger('color_palette_id')->default(1);
+            $table->string('phone')->unique();
+            $table->boolean('phone_verified')->default(true); // it must be false
+            $table->timestamp('phone_verified_at')->default(now()); // it must be nullable
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
 
             $table->foreign('color_palette_id')->references('id')->on('settings')->onDelete('cascade');
-            $table->foreign('phone_id')->references('id')->on('phones')->onDelete('cascade');
         });
     }
 

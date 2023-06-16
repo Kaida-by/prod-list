@@ -22,7 +22,7 @@ class ProductFactory extends Factory
         return [
             'name' => fake()->colorName,
             'count' => random_int(1, 10),
-            'count_type_id' => random_int(1, 3),
+            'count_type_id' => random_int(1, 5),
             'comment_id' => random_int(1, 3),
             'product_type_id' => random_int(1, 3),
             'user_id' => random_int(1, 3),
