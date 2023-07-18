@@ -2,37 +2,33 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
+use App\Models\ProductList;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class ProductController extends Controller
+class ProductListController extends Controller
 {
-    public function __construct(protected Product $product) {}
+    public function __construct(protected ProductList $productList) {}
 
     public function index(): JsonResponse
     {
         return response()->json([
-            'data' => Product::all()
+            'data' => ProductList::all()
         ]);
     }
 
     public function create(Request $request): ?JsonResponse
     {
-        $this->product->name = $request['name'];
-        $this->product->count = $request['count'];
-        $this->product->count_type_id = $request['count_type_id'];
-        $this->product->comment_id = $request['comment_id'];
-        $this->product->product_type_id = $request['product_type_id'];
-        $this->product->user_id = $request['user_id'];
+        $this->productList->name = $request['name'];
+        $this->productList->user_id = $request['user_id'];
 
         try {
-            $this->product->save();
+            $this->productList->save();
 
             return response()->json([
                 'success' => true,
-                'data' => $this->product,
+                'data' => $this->productList,
             ], 201);
         } catch (Exception $exception) {
             return response()->json([
@@ -42,21 +38,17 @@ class ProductController extends Controller
         }
     }
 
-    public function update(Request $request, Product $product): ?JsonResponse
+    public function update(Request $request, ProductList $productList): ?JsonResponse
     {
         try {
-            $product->update([
+            $productList->update([
                 'name' => $request['name'],
-                'count' => $request['count'],
-                'count_type_id' => $request['count_type_id'],
-                'comment_id' => $request['comment_id'],
-                'product_type_id' => $request['product_type_id'],
                 'user_id' => $request['user_id'],
             ]);
 
             return response()->json([
                 'success' => true,
-                'data' => $this->product,
+                'data' => $this->productList,
             ]);
         } catch (Exception $exception) {
             return response()->json([
@@ -66,10 +58,10 @@ class ProductController extends Controller
         }
     }
 
-     public function delete(Product $product): ?JsonResponse
+     public function delete(ProductList $productList): ?JsonResponse
      {
          try {
-             $product->delete();
+             $productList->delete();
 
              return response()->json([
                  'success' => true,

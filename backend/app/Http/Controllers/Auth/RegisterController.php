@@ -57,9 +57,8 @@ class RegisterController extends Controller
 
         if (!$validator->fails()) {
             $user = $this->create($request->all());
-dd($this->auth);
             $token = $this->auth->attempt($request->only('phone', 'password', 'password_confirmation'));
-dd($token);
+
             return response()->json([
                 'success' => true,
                 'data' => $user,
