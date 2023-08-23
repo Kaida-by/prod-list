@@ -22,6 +22,7 @@ class TypeProductFactory extends Factory
         return [
             'name' => fake()->title,
             'user_id' => random_int(1, 3),
+            'product_list_id' => random_int(1, 3),
         ];
     }
 }

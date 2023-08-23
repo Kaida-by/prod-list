@@ -20,9 +20,9 @@ class ProductTest extends TestCase
                     'id',
                     'name',
                     'count',
-                    'count_type_id',
                     'comment_id',
-                    'product_type_id',
+                    'type_count_id',
+                    'type_product_id',
                     'user_id',
                 ]
             ]
@@ -35,9 +35,9 @@ class ProductTest extends TestCase
         $data = [
             'name' => 'test',
             'count' => 1,
-            'count_type_id' => 1,
+            'type_count_id' => 1,
             'comment_id' => 1,
-            'product_type_id' => 1,
+            'type_product_id' => 1,
             'user_id' => 1,
             'created_at' => now(),
         ];
@@ -52,9 +52,9 @@ class ProductTest extends TestCase
         $data = [
             'name' => 'new test',
             'count' => 2,
-            'count_type_id' => 3,
+            'type_count_id' => 3,
             'comment_id' => 2,
-            'product_type_id' => 1,
+            'type_product_id' => 1,
             'user_id' => 2,
         ];
         $response = $this->patchJson('api/auth/product/update/' . $product->id, $data);

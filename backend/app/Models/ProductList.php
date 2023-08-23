@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * @property mixed $name
- * @property mixed $user_id
+ * @property string $name
+ * @property int $user_id
  * @method static findOrFail(int $int)
  */
 class ProductList extends Model

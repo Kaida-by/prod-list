@@ -22,9 +22,9 @@ class ProductController extends Controller
     {
         $this->product->name = $request['name'];
         $this->product->count = $request['count'];
-        $this->product->count_type_id = $request['count_type_id'];
+        $this->product->type_count_id = $request['type_count_id'];
         $this->product->comment_id = $request['comment_id'];
-        $this->product->product_type_id = $request['product_type_id'];
+        $this->product->type_product_id = $request['type_product_id'];
         $this->product->user_id = $request['user_id'];
 
         try {
@@ -48,9 +48,9 @@ class ProductController extends Controller
             $product->update([
                 'name' => $request['name'],
                 'count' => $request['count'],
-                'count_type_id' => $request['count_type_id'],
+                'type_count_id' => $request['type_count_id'],
                 'comment_id' => $request['comment_id'],
-                'product_type_id' => $request['product_type_id'],
+                'type_product_id' => $request['type_product_id'],
                 'user_id' => $request['user_id'],
             ]);
 
