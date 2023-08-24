@@ -4,9 +4,10 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use PHPOpenSourceSaver\JWTAuth\Exceptions\JWTException;
-use PHPOpenSourceSaver\JWTAuth\JWTAuth;
+use Illuminate\Support\Facades\Validator;
+use function response;
 
 class LoginController extends Controller
 {
@@ -23,88 +24,65 @@ class LoginController extends Controller
 
     use AuthenticatesUsers;
 
-    protected $auth;
 
     /**
      * Where to redirect users after login.
      *
      * @var string
      */
-    protected $redirectTo = '';
+    protected string $redirectTo = '';
 
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct(JWTAuth $auth)
+    public function __construct()
     {
-        $this->auth = $auth;
+        $this->middleware('auth:api', ['except' => ['login']]);
     }
 
-    public function login(Request $request)
+    public function login(Request $request): JsonResponse
     {
-        // If the class is using the ThrottlesLogins trait, we can automatically throttle
-        // the login attempts for this application. We'll key this by the username and
-        // the IP address of the client making these requests into this application.
-        if (method_exists($this, 'hasTooManyLoginAttempts') &&
-            $this->hasTooManyLoginAttempts($request)) {
-            $this->fireLockoutEvent($request);
+        $validator = Validator::make($request->all(), [
+            'phone' => 'required',
+            'password' => 'required',
+        ]);
 
-            return \response()->json([
-                'success' => false,
-                'errors' => [
-                    'You\'ve been locked out'
-                ],
-            ]);
-        }
-
-        // If the login attempt was unsuccessful we will increment the number of attempts
-        // to login and redirect the user back to the login form. Of course, when this
-        // user surpasses their maximum number of attempts they will get locked out.
-        $this->incrementLoginAttempts($request);
-
-        //attempt login with token
-        if ($request->input('token')) {
-            $this->auth->setToken($request->input('token'));
-
-            $user = $this->auth->authenticate();
-
-            if ($user) {
-                return \response()->json([
-                    'success' => true,
-                    'data' => $request->user(),
-                    'token' => $request->input('token'),
-                ], 200);
-            }
-        }
-
-        try {
-            if (!$token = $this->auth->attempt($request->only('phone', 'password'))) {
-                return \response()->json([
-                    'success' => false,
-                    'errors' => [
-                        'text' => [
-                            'Invalid phone or password'
-                        ]
-                    ]
-                ], 422);
-            }
-        } catch (JWTException $exception) {
-            return \response()->json([
-                'success' => false,
-                'errors' => [
-                    'text' => [
-                        'Invalid phone or password'
-                    ]
-                ]
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Validation failed',
+                'errors' => $validator->errors(),
             ], 422);
         }
 
-        return \response()->json([
-            'success' => true,
+        if (!$token = auth()->attempt($request->only('phone', 'password'))) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Unauthorized',
+            ], 401);
+        }
+
+        return response()->json([
+            'status' => true,
             'data' => $request->user(),
             'token' => $token,
-        ], 200);
+        ]);
+    }
+
+    public function me(): JsonResponse
+    {
+        return response()->json(auth()->user());
+    }
+
+    public function logout(): JsonResponse
+    {
+        auth()->logout();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Successfully logged out'
+        ]);
     }
 }

@@ -5,10 +5,9 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use PHPOpenSourceSaver\JWTAuth\JWTAuth;
 
 class RegisterController extends Controller
 {
@@ -25,65 +24,52 @@ class RegisterController extends Controller
 
     use RegistersUsers;
 
-    protected JWTAuth $auth;
+    public bool $loginAfterSignUp = true;
 
     /**
      * Where to redirect users after registration.
      *
      * @var string
      */
-    protected $redirectTo = '';
-
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct(JWTAuth $auth)
-    {
-        $this->auth = $auth;
-        $this->middleware('guest');
-    }
+    protected string $redirectTo = '';
 
     /**
      * Handle a registration request for the application.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
+     * @param Request $request
+     * @return JsonResponse
      */
-    public function register(Request $request)
+    public function register(Request $request): JsonResponse
     {
-        $validator = $this->validator($request->all());
+        $validator = Validator::make($request->all(), [
+            'phone' => 'required',
+            'password' => 'required|confirmed',
+        ]);
 
-        if (!$validator->fails()) {
-            $user = $this->create($request->all());
-            $token = $this->auth->attempt($request->only('phone', 'password', 'password_confirmation'));
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Validation failed',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        $user = $this->create($request->all());
+
+        if ($this->loginAfterSignUp) {
+            $token = auth()->attempt($request->only('phone', 'password'));
 
             return response()->json([
-                'success' => true,
-                'data' => $user,
+                'status' => true,
+                'data' => $request->user(),
                 'token' => $token,
             ]);
         }
 
         return response()->json([
-            'success' => false,
-            'errors' => $validator->errors(),
-        ], 422);
-    }
-
-    /**
-     * Get a validator for an incoming registration request.
-     *
-     * @param  array  $data
-     * @return \Illuminate\Contracts\Validation\Validator
-     */
-    protected function validator(array $data)
-    {
-        return Validator::make($data, [
-            'name' => ['required', 'string', 'max:255'],
-            'phone' => ['required', 'string', 'max:255'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'status' => true,
+            'data' => $user,
+            'token' => auth()->attempt($request->only('phone', 'password')),
         ]);
     }
 
@@ -91,15 +77,15 @@ class RegisterController extends Controller
      * Create a new user instance after a valid registration.
      *
      * @param  array  $data
-     * @return \App\Models\User
+     * @return User
      */
-    protected function create(array $data)
+    protected function create(array $data): User
     {
         return User::create([
             'name' => $data['name'],
             'color_palette_id' => 1,
             'phone' => $data['phone'],
-            'password' => Hash::make($data['password']),
+            'password' => bcrypt($data['password']),
         ]);
     }
 }

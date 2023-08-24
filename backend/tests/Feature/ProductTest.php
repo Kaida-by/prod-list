@@ -4,33 +4,46 @@ namespace Tests\Feature;
 
 use App\Models\Product;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\HelperForTests;
 use Tests\TestCase;
 
 class ProductTest extends TestCase
 {
     use RefreshDatabase;
+    use HelperForTests;
 
-    public function test_get_all_products_by_user_id(): void
+    protected string $token;
+
+    public function setUp(): void
     {
-        $response = $this->getJson('api/auth/products/get');
-        $response->assertOk();
-        $response->assertJsonStructure([
-            'data' => [
-                '*' => [
-                    'id',
-                    'name',
-                    'count',
-                    'comment_id',
-                    'type_count_id',
-                    'type_product_id',
-                    'user_id',
+        parent::setUp();
+
+        $this->token = $this->getAuthUser()['token'];
+    }
+
+    public function testGetAllProductsByUserId(): void
+    {
+        $response = $this->withHeaders([
+            'Authorization' => 'Bearer '. $this->token,
+        ])->getJson('api/products/get');
+        $response->assertStatus(200)
+            ->assertJsonStructure([
+                'data' => [
+                    '*' => [
+                        'id',
+                        'name',
+                        'count',
+                        'comment_id',
+                        'type_count_id',
+                        'type_product_id',
+                        'user_id',
+                    ]
                 ]
-            ]
         ]);
         $response->assertStatus(200);
     }
 
-    public function test_create_new_product(): void
+    public function testCreateNewProduct(): void
     {
         $data = [
             'name' => 'test',
@@ -41,11 +54,13 @@ class ProductTest extends TestCase
             'user_id' => 1,
             'created_at' => now(),
         ];
-        $response = $this->postJson('api/auth/product/create', $data);
+        $response = $this->withHeaders([
+            'Authorization' => 'Bearer '. $this->token,
+        ])->postJson('api/product/create', $data);
         $response->assertStatus(201);
     }
 
-    public function test_update_product(): void
+    public function testUpdateProduct(): void
     {
         $product = Product::findOrFail(1);
 
@@ -57,14 +72,18 @@ class ProductTest extends TestCase
             'type_product_id' => 1,
             'user_id' => 2,
         ];
-        $response = $this->patchJson('api/auth/product/update/' . $product->id, $data);
+        $response = $this->withHeaders([
+            'Authorization' => 'Bearer '. $this->token,
+        ])->patchJson('api/product/update/' . $product->id, $data);
         $response->assertStatus(200);
     }
 
-    public function test_delete_product(): void
+    public function testDeleteProduct(): void
     {
         $product = Product::findOrFail(1);
-        $response = $this->deleteJson('api/auth/product/delete/' . $product->id);
+        $response = $this->withHeaders([
+            'Authorization' => 'Bearer '. $this->token,
+        ])->deleteJson('api/product/delete/' . $product->id);
         $response->assertStatus(204);
     }
 }
