@@ -27,6 +27,9 @@ Route::group(['prefix' => '/auth', 'middleware' => 'api'], static function () {
 });
 
 Route::group(['middleware' => 'jwt.auth'], static function () {
+    //User
+    Route::get('/me', [LoginController::class, 'me']);
+
     //Product
     Route::get('/products/get', [ProductController::class, 'index']);
     Route::post('/product/create', [ProductController::class, 'create']);

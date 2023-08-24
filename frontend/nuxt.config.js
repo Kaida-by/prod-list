@@ -22,6 +22,10 @@ export default {
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
+    './plugins/mixins/validation',
+    './plugins/mixins/user',
+    './plugins/axios',
+    './plugins/element-ui.js',
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -33,18 +37,49 @@ export default {
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
-    // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
-    // https://go.nuxtjs.dev/pwa
+    '@nuxtjs/auth-next',
     '@nuxtjs/pwa',
-    // https://go.nuxtjs.dev/content
+    '@nuxtjs/dotenv',
     '@nuxt/content',
+    '@nuxtjs/tailwindcss'
   ],
 
-  // Axios module configuration: https://go.nuxtjs.dev/config-axios
+  auth: {
+    strategies: {
+      local: {
+        token: {
+          property: 'token',
+          required: true,
+          type: 'Bearer'
+        },
+        user: {
+          property: 'data',
+          autoFetch: true
+        },
+        endpoints: {
+          login: { url: 'auth/login', method: 'post', propertyName: 'token', redirect: 'index' },
+          logout: { url: 'auth/logout', method: 'post' },
+          refresh: { url: 'auth/refresh', method: 'post' },
+          user: { url: '/me', method: 'get', propertyName: 'data' },
+        },
+      },
+    },
+    redirect: {
+      login: '/auth/login',
+      // logout: '/',
+      home: '/'
+    },
+    watchLoggedIn: true,
+    rewriteRedirects: true
+  },
+
   axios: {
     // Workaround to avoid enforcing hard-coded localhost:3000: https://github.com/nuxt-community/axios-module/issues/308
-    baseURL: '/',
+    // baseURL: '/',
+    baseUrl: process.env.API_URL,
+    //credentials: true,
+    //proxy: true,
   },
 
   // PWA module configuration: https://go.nuxtjs.dev/pwa
@@ -59,6 +94,13 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
+  },
+
+  vue: {
+    config: {
+      devtools: true,
+      productionTip: false,
+    },
   },
 
   server: {
