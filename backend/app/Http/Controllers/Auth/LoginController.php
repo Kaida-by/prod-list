@@ -73,7 +73,10 @@ class LoginController extends Controller
 
     public function me(): JsonResponse
     {
-        return response()->json(auth()->user());
+        return response()->json([
+            'status' => true,
+            'data' => auth()->user(),
+        ]);
     }
 
     public function logout(): JsonResponse
