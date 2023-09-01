@@ -6,6 +6,7 @@ use App\Models\ProductList;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class ProductListController extends Controller
 {
@@ -18,8 +19,39 @@ class ProductListController extends Controller
         ]);
     }
 
+    public function one(int $id): ?JsonResponse
+    {
+        try {
+            $productList = ProductList::where([
+                'id' => $id,
+                'user_id' => auth()->id()
+            ])->first();
+
+            return response()->json([
+                'success' => true,
+                'data' => $productList
+            ]);
+        } catch (Exception $exeption) {
+            return response()->json([
+                'success' => false,
+                'errors' => $exeption->errors(),
+            ], 500);
+        }
+    }
+
     public function create(Request $request): ?JsonResponse
     {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors(),
+            ], 500);
+        }
+
         $this->productList->name = $request['name'];
         $this->productList->user_id = $request['user_id'];
 
@@ -33,7 +65,11 @@ class ProductListController extends Controller
         } catch (Exception $exception) {
             return response()->json([
                 'success' => false,
-                'msg' => $exception->getMessage(),
+                'errors' => [
+                    'name' => [
+                        $exception->getMessage()
+                    ]
+                ],
             ]);
         }
     }
@@ -48,7 +84,7 @@ class ProductListController extends Controller
 
             return response()->json([
                 'success' => true,
-                'data' => $this->productList,
+                'data' => $productList,
             ]);
         } catch (Exception $exception) {
             return response()->json([

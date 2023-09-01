@@ -1,23 +1,20 @@
 <template>
   <div class="container mx-auto align-middle flex w-100">
-    <div class="header-sdk" v-if="$auth.loggedIn">
-      <div class="py-2">
-        Hello, {{ $auth.user.name }}
-      </div>
-      <el-button type="info" plain @click.prevent="logOut">logout</el-button>
-    </div>
+    <product-list></product-list>
   </div>
 </template>
 
 <script>
+
+import ProductList from "../../components/models/ProductList";
+
 export default {
   name: "home",
+  components: {
+    ProductList
+  },
+
   middleware: 'auth',
-  methods: {
-    logOut() {
-      this.$auth.logout();
-    }
-  }
 }
 </script>
 

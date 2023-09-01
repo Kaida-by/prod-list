@@ -61,6 +61,11 @@ class LoginController extends Controller
             return response()->json([
                 'status' => false,
                 'message' => 'Unauthorized',
+                'errors' => [
+                    'password' => [
+                        'Incorrect phone or password'
+                    ]
+                ],
             ], 401);
         }
 

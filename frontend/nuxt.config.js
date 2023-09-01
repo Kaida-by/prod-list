@@ -84,9 +84,9 @@ export default {
       },
     },
     redirect: {
-      login: '/auth/login',
+      login: '/',
       logout: '/',
-      callback: '/auth/login',
+      callback: '/',
       home: '/home'
     },
     watchLoggedIn: true,

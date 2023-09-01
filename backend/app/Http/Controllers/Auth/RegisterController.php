@@ -42,8 +42,9 @@ class RegisterController extends Controller
     public function register(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'phone' => 'required',
-            'password' => 'required|confirmed',
+            'name' => 'required|string',
+            'phone' => 'required|integer',
+            'password' => 'required|min:8',
         ]);
 
         if ($validator->fails()) {
@@ -51,6 +52,18 @@ class RegisterController extends Controller
                 'status' => false,
                 'message' => 'Validation failed',
                 'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        if (User::where('phone', $request['phone'])->exists()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Validation failed',
+                'errors' => [
+                    'phone' => [
+                        'This number already exists'
+                    ]
+                ],
             ], 422);
         }
 

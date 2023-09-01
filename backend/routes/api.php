@@ -38,6 +38,7 @@ Route::group(['middleware' => 'jwt.auth'], static function () {
 
     //ProductList
     Route::get('/product-lists/get', [ProductListController::class, 'index']);
+    Route::get('/product-list/{id}', [ProductListController::class, 'one']);
     Route::post('/product-list/create', [ProductListController::class, 'create']);
     Route::patch('/product-list/update/{productList}', [ProductListController::class, 'update']);
     Route::delete('/product-list/delete/{productList}', [ProductListController::class, 'delete']);
