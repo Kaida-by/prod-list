@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\ProductList;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\HelperForTests;
 use Tests\TestCase;
@@ -36,6 +37,37 @@ class ProductListTest extends TestCase
                     ]
                 ]
         ]);
+        $response->assertStatus(200);
+    }
+
+    public function testGetOneProductList(): void
+    {
+        User::factory()->create([
+            'phone' => '375001234568',
+            'password' => bcrypt('password'),
+        ]);
+
+        $credentials = [
+            'phone' => '375001234568',
+            'password' => 'password',
+        ];
+
+        $id = $this->postJson('api/auth/login', $credentials)['data']['id'];
+
+        $data = [
+            'name' => 'test',
+            'user_id' => $id,
+        ];
+
+        $this->withHeaders([
+            'Authorization' => 'Bearer '. $this->token,
+        ])->postJson('api/product-list/create', $data);
+
+        $prodListId = ProductList::where('user_id', $id)->first();
+
+        $response = $this->withHeaders([
+            'Authorization' => 'Bearer '. $this->token,
+        ])->getJson('api/product-list/' . $prodListId->id);
         $response->assertStatus(200);
     }
 

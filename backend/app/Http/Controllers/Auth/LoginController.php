@@ -61,6 +61,11 @@ class LoginController extends Controller
             return response()->json([
                 'status' => false,
                 'message' => 'Unauthorized',
+                'errors' => [
+                    'password' => [
+                        'Incorrect phone or password'
+                    ]
+                ],
             ], 401);
         }
 
@@ -73,7 +78,10 @@ class LoginController extends Controller
 
     public function me(): JsonResponse
     {
-        return response()->json(auth()->user());
+        return response()->json([
+            'status' => true,
+            'data' => auth()->user(),
+        ]);
     }
 
     public function logout(): JsonResponse
