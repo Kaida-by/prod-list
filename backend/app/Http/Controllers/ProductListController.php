@@ -14,6 +14,9 @@ class ProductListController extends Controller
 
     public function index(): JsonResponse
     {
+        $productLists = ProductList::where('user_id', auth()->id())
+            ->simplePaginate(10);
+        dd($productLists);
         return response()->json([
             'data' => ProductList::all()
         ]);
