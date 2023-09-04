@@ -2,7 +2,7 @@
   <div class="container mx-auto align-middle flex w-100">
     <div class="sm:mx-auto w-2/5 h-full flex flex-col items-center justify-center">
       <div class="bg-white w-full rounded-lg pt-12 pb-7">
-        <h1 class="text-center w-full pb-5 text-2xl">Create Product List</h1>
+        <h1 class="text-center w-full pb-5 text-2xl">Create Type Product!</h1>
         <el-form :model="form" status-icon ref="form" class="flex flex-col justify-center items-center">
           <el-form-item prop="name" class="w-3/5">
             <el-input placeholder="Name" type="name" v-model="form.name"></el-input>

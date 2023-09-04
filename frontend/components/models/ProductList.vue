@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="all_prod_lists">
-      <div class="prod_list" v-for="prod_list in prod_lists">
+      <div v-for="prod_list in prod_lists">
         <div>
           <nuxt-link :to="'/product-list/' + prod_list.id">
             <p>{{ prod_list.name }}</p>
@@ -27,7 +27,7 @@ export default {
     async fetchData() {
       await this.$axios.get('product-lists/get')
           .then((res) => {
-            this.prod_lists = res.data.data
+            this.prod_lists = res.data.data.data
           })
           .catch(err => console.log(err))
     }

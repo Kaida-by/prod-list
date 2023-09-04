@@ -1,7 +1,5 @@
 <template>
-  <div>
-    prod lists
-  </div>
+
 </template>
 
 <script>
