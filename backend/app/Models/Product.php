@@ -6,12 +6,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
+ * @property int $id
  * @property string $name
  * @property int $count
  * @property int $type_count_id
  * @property int $comment_id
  * @property int $type_product_id
  * @property int $user_id
+ * @property string $created_at
+ * @property string $updated_at
  * @method static findOrFail(int $int)
  */
 class Product extends Model

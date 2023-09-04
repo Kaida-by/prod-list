@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Data\RequestData\ProductListDataRequest;
+use App\Data\ResourceData\ProductListDataResource;
 use App\Models\ProductList;
 use Exception;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
 class ProductListController extends Controller
 {
@@ -14,8 +14,11 @@ class ProductListController extends Controller
 
     public function index(): JsonResponse
     {
+        $productLists = ProductList::where('user_id', auth()->id())
+            ->simplePaginate(10);
+
         return response()->json([
-            'data' => ProductList::all()
+            'data' => ProductListDataResource::collection($productLists),
         ]);
     }
 
@@ -29,7 +32,7 @@ class ProductListController extends Controller
 
             return response()->json([
                 'success' => true,
-                'data' => $productList
+                'data' => ProductListDataRequest::from($productList)
             ]);
         } catch (Exception $exeption) {
             return response()->json([
@@ -39,21 +42,10 @@ class ProductListController extends Controller
         }
     }
 
-    public function create(Request $request): ?JsonResponse
+    public function create(ProductListDataRequest $productListDataRequest): ?JsonResponse
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'errors' => $validator->errors(),
-            ], 500);
-        }
-
-        $this->productList->name = $request['name'];
-        $this->productList->user_id = $request['user_id'];
+        $this->productList->name = $productListDataRequest->name;
+        $this->productList->user_id = auth()->id();
 
         try {
             $this->productList->save();
@@ -74,12 +66,12 @@ class ProductListController extends Controller
         }
     }
 
-    public function update(Request $request, ProductList $productList): ?JsonResponse
+    public function update(ProductListDataRequest $productListDataRequest, ProductList $productList): ?JsonResponse
     {
         try {
             $productList->update([
-                'name' => $request['name'],
-                'user_id' => $request['user_id'],
+                'name' => $productListDataRequest->name,
+                'user_id' => auth()->id(),
             ]);
 
             return response()->json([

@@ -24,16 +24,31 @@ class ProductListTest extends TestCase
 
     public function testGetAllProductListsByUserId(): void
     {
+        $data = [
+            'name' => 'test',
+            'user_id' => 1,
+        ];
+
+        $response = $this->withHeaders([
+            'Authorization' => 'Bearer '. $this->token,
+        ])->postJson('api/product-list/create', $data);
+        $response->assertStatus(201);
+
         $response = $this->withHeaders([
             'Authorization' => 'Bearer '. $this->token,
         ])->getJson('api/product-lists/get');
+
         $response->assertStatus(200)
             ->assertJsonStructure([
                 'data' => [
-                    '*' => [
-                        'id',
-                        'name',
-                        'user_id',
+                    'data' => [
+                        '*' => [
+                            'id',
+                            'name',
+                            'user_id',
+                            'created_at',
+                            'updated_at',
+                        ]
                     ]
                 ]
         ]);
@@ -42,28 +57,16 @@ class ProductListTest extends TestCase
 
     public function testGetOneProductList(): void
     {
-        User::factory()->create([
-            'phone' => '375001234568',
-            'password' => bcrypt('password'),
-        ]);
-
-        $credentials = [
-            'phone' => '375001234568',
-            'password' => 'password',
-        ];
-
-        $id = $this->postJson('api/auth/login', $credentials)['data']['id'];
-
         $data = [
             'name' => 'test',
-            'user_id' => $id,
+            'user_id' => auth()->id(),
         ];
 
         $this->withHeaders([
             'Authorization' => 'Bearer '. $this->token,
         ])->postJson('api/product-list/create', $data);
 
-        $prodListId = ProductList::where('user_id', $id)->first();
+        $prodListId = ProductList::where('user_id', auth()->id())->first();
 
         $response = $this->withHeaders([
             'Authorization' => 'Bearer '. $this->token,

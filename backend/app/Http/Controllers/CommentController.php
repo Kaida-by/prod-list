@@ -2,26 +2,39 @@
 
 namespace App\Http\Controllers;
 
+use App\Data\RequestData\CommentDataRequest;
 use App\Models\Comment;
 use Exception;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class CommentController extends Controller
 {
     public function __construct(protected Comment $comment) {}
 
-    public function index(): JsonResponse
+    public function one(int $id): ?JsonResponse
     {
-        return response()->json([
-            'data' => Comment::all()
-        ]);
+        try {
+            $comments = Comment::where([
+                'id' => $id,
+                'user_id' => auth()->id()
+            ])->first();
+
+            return response()->json([
+                'success' => true,
+                'data' => CommentDataRequest::from($comments)
+            ]);
+        } catch (Exception $exeption) {
+            return response()->json([
+                'success' => false,
+                'errors' => $exeption->errors(),
+            ], 500);
+        }
     }
 
-    public function create(Request $request): ?JsonResponse
+    public function create(CommentDataRequest $commentDataRequest): ?JsonResponse
     {
-        $this->comment->text = $request['text'];
-        $this->comment->user_id = $request['user_id'];
+        $this->comment->text = $commentDataRequest->text;
+        $this->comment->user_id = auth()->id();
 
         try {
             $this->comment->save();
@@ -38,12 +51,12 @@ class CommentController extends Controller
         }
     }
 
-    public function update(Request $request, Comment $comment): ?JsonResponse
+    public function update(CommentDataRequest $commentDataRequest, Comment $comment): ?JsonResponse
     {
         try {
             $comment->update([
-                'text' => $request['text'],
-                'user_id' => $request['user_id'],
+                'text' => $commentDataRequest->text,
+                'user_id' => auth()->id(),
             ]);
 
             return response()->json([

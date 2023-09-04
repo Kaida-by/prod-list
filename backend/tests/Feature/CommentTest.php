@@ -21,25 +21,6 @@ class CommentTest extends TestCase
         $this->token = $this->getAuthUser()['token'];
     }
 
-    public function testGetAllCommentsByUserId(): void
-    {
-        $response = $this->withHeaders([
-            'Authorization' => 'Bearer '. $this->token,
-        ])->getJson('api/comments/get');
-        $response->assertOk();
-        $response->assertStatus(200)
-            ->assertJsonStructure([
-                'data' => [
-                    '*' => [
-                        'id',
-                        'text',
-                        'user_id',
-                    ]
-                ]
-        ]);
-        $response->assertStatus(200);
-    }
-
     public function testCreateNewComment(): void
     {
         $data = [
@@ -51,6 +32,25 @@ class CommentTest extends TestCase
             'Authorization' => 'Bearer '. $this->token,
         ])->postJson('api/comment/create', $data);
         $response->assertStatus(201);
+    }
+
+    public function testGetOneComment(): void
+    {
+        $data = [
+            'text' => 'test',
+            'user_id' => auth()->id(),
+        ];
+
+        $this->withHeaders([
+            'Authorization' => 'Bearer '. $this->token,
+        ])->postJson('api/comment/create', $data);
+
+        $comment = Comment::where('user_id', auth()->id())->first();
+
+        $response = $this->withHeaders([
+            'Authorization' => 'Bearer '. $this->token,
+        ])->getJson('api/comment/' . $comment->id);
+        $response->assertStatus(200);
     }
 
     public function testUpdateComment(): void

@@ -21,6 +21,30 @@ class ProductTest extends TestCase
         $this->token = $this->getAuthUser()['token'];
     }
 
+    public function testGetOneProduct(): void
+    {
+        $data = [
+            'name' => 'test',
+            'count' => 1,
+            'type_count_id' => 1,
+            'comment_id' => 1,
+            'type_product_id' => 1,
+            'user_id' => 1,
+            'created_at' => now(),
+        ];
+
+        $this->withHeaders([
+            'Authorization' => 'Bearer '. $this->token,
+        ])->postJson('api/product/create', $data);
+
+        $product = Product::where('user_id', auth()->id())->first();
+
+        $response = $this->withHeaders([
+            'Authorization' => 'Bearer '. $this->token,
+        ])->getJson('api/product/' . $product->id);
+        $response->assertStatus(200);
+    }
+
     public function testGetAllProductsByUserId(): void
     {
         $response = $this->withHeaders([
@@ -29,14 +53,16 @@ class ProductTest extends TestCase
         $response->assertStatus(200)
             ->assertJsonStructure([
                 'data' => [
-                    '*' => [
-                        'id',
-                        'name',
-                        'count',
-                        'comment_id',
-                        'type_count_id',
-                        'type_product_id',
-                        'user_id',
+                    'data' => [
+                        '*' => [
+                            'id',
+                            'name',
+                            'count',
+                            'comment_id',
+                            'type_count_id',
+                            'type_product_id',
+                            'user_id',
+                        ]
                     ]
                 ]
         ]);
