@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Data\RequestData\ProductDataRequest;
+use App\Data\ResourceData\ProductDataResource;
 use App\Models\Product;
 use Exception;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
@@ -13,19 +14,42 @@ class ProductController extends Controller
 
     public function index(): JsonResponse
     {
+        $products = Product::where('user_id', auth()->id())
+            ->simplePaginate(10);
+
         return response()->json([
-            'data' => Product::all()
+            'data' => ProductDataResource::collection($products),
         ]);
     }
 
-    public function create(Request $request): ?JsonResponse
+    public function one(int $id): ?JsonResponse
     {
-        $this->product->name = $request['name'];
-        $this->product->count = $request['count'];
-        $this->product->type_count_id = $request['type_count_id'];
-        $this->product->comment_id = $request['comment_id'];
-        $this->product->type_product_id = $request['type_product_id'];
-        $this->product->user_id = $request['user_id'];
+        try {
+            $product = Product::where([
+                'id' => $id,
+                'user_id' => auth()->id()
+            ])->first();
+
+            return response()->json([
+                'success' => true,
+                'data' => ProductDataRequest::from($product)
+            ]);
+        } catch (Exception $exeption) {
+            return response()->json([
+                'success' => false,
+                'errors' => $exeption->errors(),
+            ], 500);
+        }
+    }
+
+    public function create(ProductDataRequest $productDataRequest): ?JsonResponse
+    {
+        $this->product->name = $productDataRequest->name;
+        $this->product->count = $productDataRequest->count;
+        $this->product->type_count_id = $productDataRequest->type_count_id;
+        $this->product->comment_id = $productDataRequest->comment_id;
+        $this->product->type_product_id = $productDataRequest->type_product_id;
+        $this->product->user_id = auth()->id();
 
         try {
             $this->product->save();
@@ -42,16 +66,16 @@ class ProductController extends Controller
         }
     }
 
-    public function update(Request $request, Product $product): ?JsonResponse
+    public function update(ProductDataRequest $productDataRequest, Product $product): ?JsonResponse
     {
         try {
             $product->update([
-                'name' => $request['name'],
-                'count' => $request['count'],
-                'type_count_id' => $request['type_count_id'],
-                'comment_id' => $request['comment_id'],
-                'type_product_id' => $request['type_product_id'],
-                'user_id' => $request['user_id'],
+                'name' => $productDataRequest->name,
+                'count' => $productDataRequest->count,
+                'type_count_id' => $productDataRequest->type_count_id,
+                'comment_id' => $productDataRequest->comment_id,
+                'type_product_id' => $productDataRequest->type_product_id,
+                'user_id' => auth()->id(),
             ]);
 
             return response()->json([

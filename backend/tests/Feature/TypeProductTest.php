@@ -29,14 +29,36 @@ class TypeProductTest extends TestCase
         $response->assertStatus(200)
             ->assertJsonStructure([
                 'data' => [
-                    '*' => [
-                        'id',
-                        'name',
-                        'user_id',
-                        'product_list_id',
+                    'data' => [
+                        '*' => [
+                            'id',
+                            'name',
+                            'user_id',
+                            'product_list_id',
+                        ]
                     ]
                 ]
         ]);
+        $response->assertStatus(200);
+    }
+
+    public function testGetOneProduct(): void
+    {
+        $data = [
+            'name' => 'new test',
+            'user_id' => 2,
+            'product_list_id' => 1,
+        ];
+
+        $this->withHeaders([
+            'Authorization' => 'Bearer '. $this->token,
+        ])->postJson('api/type-product/create', $data);
+
+        $typeProduct = TypeProduct::where('user_id', auth()->id())->first();
+
+        $response = $this->withHeaders([
+            'Authorization' => 'Bearer '. $this->token,
+        ])->getJson('api/type-product/' . $typeProduct->id);
         $response->assertStatus(200);
     }
 

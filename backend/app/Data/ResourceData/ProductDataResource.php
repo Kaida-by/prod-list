@@ -1,10 +1,12 @@
 <?php
 
+namespace App\Data\ResourceData;
+
 use App\Models\Product;
 use Spatie\LaravelData\Data;
 use Illuminate\Database\Eloquent\Collection;
 
-class ProductData extends Data
+class ProductDataResource extends Data
 {
     public function __construct(
        public int $id,

@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Data\RequestData\TypeProductDataRequest;
+use App\Data\ResourceData\TypeProductDataResource;
 use App\Models\TypeProduct;
 use Exception;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class TypeProductController extends Controller
 {
@@ -13,16 +14,39 @@ class TypeProductController extends Controller
 
     public function index(): JsonResponse
     {
+        $typeProducts = TypeProduct::where('user_id', auth()->id())
+            ->simplePaginate(10);
+
         return response()->json([
-            'data' => TypeProduct::all()
+            'data' => TypeProductDataResource::collection($typeProducts),
         ]);
     }
 
-    public function create(Request $request): ?JsonResponse
+    public function one(int $id): ?JsonResponse
     {
-        $this->typeProduct->name = $request['name'];
-        $this->typeProduct->user_id = $request['user_id'];
-        $this->typeProduct->product_list_id = $request['product_list_id'];
+        try {
+            $typeProduct = TypeProduct::where([
+                'id' => $id,
+                'user_id' => auth()->id()
+            ])->first();
+
+            return response()->json([
+                'success' => true,
+                'data' => TypeProductDataRequest::from($typeProduct)
+            ]);
+        } catch (Exception $exeption) {
+            return response()->json([
+                'success' => false,
+                'errors' => $exeption->errors(),
+            ], 500);
+        }
+    }
+
+    public function create(TypeProductDataRequest $typeProductDataRequest): ?JsonResponse
+    {
+        $this->typeProduct->name = $typeProductDataRequest->name;
+        $this->typeProduct->user_id = auth()->id();
+        $this->typeProduct->product_list_id = $typeProductDataRequest->product_list_id;
 
         try {
             $this->typeProduct->save();
@@ -39,13 +63,13 @@ class TypeProductController extends Controller
         }
     }
 
-    public function update(Request $request, TypeProduct $typeProduct): ?JsonResponse
+    public function update(TypeProductDataRequest $typeProductDataRequest, TypeProduct $typeProduct): ?JsonResponse
     {
         try {
             $typeProduct->update([
-                'name' => $request['name'],
-                'user_id' => $request['user_id'],
-                'product_list_id' => $request['product_list_id'],
+                'name' => $typeProductDataRequest->name,
+                'user_id' => auth()->id(),
+                'product_list_id' => $typeProductDataRequest->product_list_id,
             ]);
 
             return response()->json([

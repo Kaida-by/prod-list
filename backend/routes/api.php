@@ -32,6 +32,7 @@ Route::group(['middleware' => 'jwt.auth'], static function () {
 
     //Product
     Route::get('/products/get', [ProductController::class, 'index']);
+    Route::get('/product/{id}', [ProductController::class, 'one']);
     Route::post('/product/create', [ProductController::class, 'create']);
     Route::patch('/product/update/{product}', [ProductController::class, 'update']);
     Route::delete('/product/delete/{product}', [ProductController::class, 'delete']);
@@ -45,12 +46,13 @@ Route::group(['middleware' => 'jwt.auth'], static function () {
 
     //TypeProduct
     Route::get('/type-products/get', [TypeProductController::class, 'index']);
+    Route::get('/type-product/{id}', [TypeProductController::class, 'one']);
     Route::post('/type-product/create', [TypeProductController::class, 'create']);
     Route::patch('/type-product/update/{typeProduct}', [TypeProductController::class, 'update']);
     Route::delete('/type-product/delete/{typeProduct}', [TypeProductController::class, 'delete']);
 
     //Comment
-    Route::get('/comments/get', [CommentController::class, 'index']);
+    Route::get('/comment/{id}', [CommentController::class, 'one']);
     Route::post('/comment/create', [CommentController::class, 'create']);
     Route::patch('/comment/update/{typeProduct}', [CommentController::class, 'update']);
     Route::delete('/comment/delete/{typeProduct}', [CommentController::class, 'delete']);

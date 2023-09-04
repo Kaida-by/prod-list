@@ -1,9 +1,11 @@
 <?php
 
+namespace App\Data\ResourceData;
+
 use App\Models\TypeProduct;
 use Spatie\LaravelData\Data;
 
-class TypeProductData extends Data
+class TypeProductDataResource extends Data
 {
     public function __construct(
         public int $id,
