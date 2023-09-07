@@ -4,6 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use App\Models\TypeCount;
+use App\Models\TypeProduct;
 
 /**
  * @property int $id
@@ -15,6 +18,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $user_id
  * @property string $created_at
  * @property string $updated_at
+ * @property-read TypeCount|null typeCount
+ * @property-read TypeProduct|null typeProduct
  * @method static findOrFail(int $int)
  */
 class Product extends Model
@@ -33,4 +38,14 @@ class Product extends Model
     protected $dates = [
         'created_at',
     ];
+
+    public function typeCount(): HasOne
+    {
+        return $this->hasOne(TypeCount::class, 'id', 'type_count_id');
+    }
+
+    public function typeProduct(): HasOne
+    {
+        return $this->hasOne(TypeProduct::class, 'id', 'type_product_id');
+    }
 }

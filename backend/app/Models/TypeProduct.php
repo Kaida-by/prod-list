@@ -17,4 +17,10 @@ use Illuminate\Database\Eloquent\Model;
 class TypeProduct extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'name',
+        'user_id',
+        'product_list_id',
+    ];
 }
