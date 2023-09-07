@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\HelpController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductListController;
 use App\Http\Controllers\TypeProductController;
@@ -56,4 +57,7 @@ Route::group(['middleware' => 'jwt.auth'], static function () {
     Route::post('/comment/create', [CommentController::class, 'create']);
     Route::patch('/comment/update/{typeProduct}', [CommentController::class, 'update']);
     Route::delete('/comment/delete/{typeProduct}', [CommentController::class, 'delete']);
+
+    //GetSomeEntities
+    Route::get('/type-counts/get', [HelpController::class, 'getTypeCounts']);
 });

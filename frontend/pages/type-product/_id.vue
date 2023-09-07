@@ -8,6 +8,19 @@
             <el-input placeholder="Name" type="name" v-model="form.name"></el-input>
             <span class="is_invalid" v-if="err.name"> {{ err.name[0] }}</span>
           </el-form-item>
+          <p>Your Product Lists:</p>
+          <el-select
+              v-model="form.product_list_id"
+              placeholder="Select"
+              style="width: 240px"
+          >
+            <el-option
+                v-for="prod_list in prod_lists"
+                :key="prod_list.name"
+                :label="prod_list.name"
+                :value="prod_list.id"
+            />
+          </el-select>
           <el-form-item class="mb-0 text-center w-3/5">
             <el-button type="primary" @click="update('form')" class="px-6 w-full">
               Update!
@@ -30,9 +43,11 @@ export default {
     return {
       form: {
         name: '',
-        user_id: this.$auth.user.id
+        user_id: this.$auth.user.id,
+        product_list_id: '',
       },
-      err: {}
+      err: {},
+      prod_lists: [],
     }
   },
   methods: {
@@ -70,9 +85,22 @@ export default {
         }
       }
     },
+    async fetchProdList() {
+      try {
+        await this.$axios.get('product-lists/get')
+            .then((res) => {
+              this.prod_lists = res.data.data.data
+            })
+            .catch(err => console.log(err))
+      } catch (e) {
+        console.log(e)
+        return
+      }
+    }
   },
   mounted () {
     this.fetchData()
+    this.fetchProdList()
   }
 }
 </script>

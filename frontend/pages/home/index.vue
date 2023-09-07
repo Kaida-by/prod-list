@@ -29,13 +29,13 @@ import Product from "../../components/models/Product";
 
 export default {
   name: "home",
+  middleware: 'auth',
+
   components: {
     ProductList,
     ProductType,
     Product
   },
-
-  middleware: 'auth',
 }
 </script>
 

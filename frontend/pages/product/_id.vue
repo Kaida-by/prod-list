@@ -8,6 +8,34 @@
             <el-input placeholder="Name" type="name" v-model="form.name"></el-input>
             <span class="is_invalid" v-if="err.name"> {{ err.name[0] }}</span>
           </el-form-item>
+          <p>Your Product Types:</p>
+          <el-select
+              v-model="form.type_product_id"
+              placeholder="Select"
+              style="width: 240px"
+          >
+            <el-option
+                v-for="type_product in type_products"
+                :key="type_product.name"
+                :label="type_product.name"
+                :value="type_product.id"
+            />
+          </el-select>
+          <p>Count: </p>
+          <el-input-number v-model="form.count" :min="1" :max="999999999" />
+          <p>Your Type Counts:</p>
+          <el-select
+              v-model="form.type_count_id"
+              placeholder="Select"
+              style="width: 240px"
+          >
+            <el-option
+                v-for="type_count in type_counts"
+                :key="type_count.name"
+                :label="type_count.name"
+                :value="type_count.id"
+            />
+          </el-select>
           <el-form-item class="mb-0 text-center w-3/5">
             <el-button type="primary" @click="update('form')" class="px-6 w-full">
               Update!
@@ -30,9 +58,15 @@ export default {
     return {
       form: {
         name: '',
-        user_id: this.$auth.user.id
+        count: '',
+        type_count_id: '',
+        comment_id: '',
+        type_product_id: '',
+        user_id: this.$auth.user.id,
       },
-      err: {}
+      err: {},
+      type_products: [],
+      type_counts: [],
     }
   },
   methods: {
@@ -59,7 +93,7 @@ export default {
         }
       }
     },
-    async deleteTypeProd() {
+    async deleteProd() {
       if (confirm("Do you really want to delete this Product?")) {
         try {
           this.$axios.delete('/product/delete/' + this.$route.params.id).then(response => {
@@ -70,9 +104,35 @@ export default {
         }
       }
     },
+    async fetchTypeProducts() {
+      try {
+        await this.$axios.get('type-products/get')
+            .then((res) => {
+              this.type_products = res.data.data.data
+            })
+            .catch(err => console.log(err))
+      } catch (e) {
+        console.log(e)
+        return
+      }
+    },
+    async fetchTypeCounts() {
+      try {
+        await this.$axios.get('type-counts/get')
+            .then((res) => {
+              this.type_counts = res.data.data
+            })
+            .catch(err => console.log(err))
+      } catch (e) {
+        console.log(e)
+        return
+      }
+    }
   },
   mounted () {
     this.fetchData()
+    this.fetchTypeProducts()
+    this.fetchTypeCounts()
   }
 }
 </script>

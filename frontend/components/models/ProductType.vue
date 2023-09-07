@@ -4,9 +4,7 @@
       <div v-for="type_product in type_products">
         <div>
           <nuxt-link :to="'/type-product/' + type_product.id">
-            <p>{{ type_product.name }}</p>
-            <p>{{ type_product.user_id }}</p>
-            <p>{{ type_product.product_list_id }}</p>
+            <p>{{ type_product.name }}; id - {{ type_product.id }}; product list - {{ type_product.product_list_id }}</p>
           </nuxt-link>
         </div>
       </div>

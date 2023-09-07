@@ -5,8 +5,9 @@
         <div>
           <nuxt-link :to="'/product/' + product.id">
             <p>{{ product.name }}</p>
-            <p>{{ product.user_id }}</p>
-            <p>{{ product.product_list_id }}</p>
+            <p>{{ product.count }} - {{ product.typeCount.name }}</p>
+            <p>product type - {{ product.typeProduct.id }};</p>
+            <p>product list - {{ product.typeProduct.product_list_id }};</p>
           </nuxt-link>
         </div>
       </div>
