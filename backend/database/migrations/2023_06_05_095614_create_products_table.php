@@ -19,6 +19,7 @@ return new class extends Migration
             $table->unsignedBigInteger('type_count_id');
             $table->unsignedBigInteger('type_product_id');
             $table->unsignedBigInteger('user_id');
+            $table->softDeletes();
             $table->timestamps();
 
             $table->foreign('type_count_id')->references('id')->on('type_counts')->onDelete('cascade');

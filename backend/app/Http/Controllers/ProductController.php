@@ -4,13 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Data\RequestData\ProductDataRequest;
 use App\Data\ResourceData\ProductDataResource;
+use App\Models\GeneralProduct;
 use App\Models\Product;
 use Exception;
 use Illuminate\Http\JsonResponse;
 
 class ProductController extends Controller
 {
-    public function __construct(protected Product $product) {}
+    public function __construct(
+        protected Product $product,
+        protected GeneralProduct $generalProduct,
+    ) {}
 
     public function index(): JsonResponse
     {
@@ -53,6 +57,10 @@ class ProductController extends Controller
 
         try {
             $this->product->save();
+            $this->generalProduct->firstOrCreate([
+                'name' => $productDataRequest->name,
+                'user_id' => auth()->id(),
+            ]);
 
             return response()->json([
                 'success' => true,
@@ -69,12 +77,22 @@ class ProductController extends Controller
     public function update(ProductDataRequest $productDataRequest, Product $product): ?JsonResponse
     {
         try {
+            $generalProduct = $this->generalProduct->where([
+                'user_id' => $product->user_id,
+                'name' => $product->name,
+            ])->first();
+
             $product->update([
                 'name' => $productDataRequest->name,
                 'count' => $productDataRequest->count,
                 'type_count_id' => $productDataRequest->type_count_id,
                 'comment_id' => $productDataRequest->comment_id,
                 'type_product_id' => $productDataRequest->type_product_id,
+                'user_id' => auth()->id(),
+            ]);
+
+            $generalProduct->update([
+                'name' => $productDataRequest->name,
                 'user_id' => auth()->id(),
             ]);
 
@@ -90,19 +108,24 @@ class ProductController extends Controller
         }
     }
 
-     public function delete(Product $product): ?JsonResponse
-     {
-         try {
-             $product->delete();
+    public function delete(Product $product): ?JsonResponse
+    {
+        try {
+            $generalProduct = $this->generalProduct->where([
+                'user_id' => $product->user_id,
+                'name' => $product->name
+            ])->first();
+            $product->forceDelete();
+            $generalProduct->delete();
 
-             return response()->json([
-                 'success' => true,
-             ], 204);
-         } catch (Exception $exception) {
-             return response()->json([
-                 'success' => false,
-                 'msg' => $exception->getMessage(),
-             ]);
-         }
-     }
+            return response()->json([
+                'success' => true,
+            ], 204);
+        } catch (Exception $exception) {
+            return response()->json([
+                'success' => false,
+                'msg' => $exception->getMessage(),
+            ]);
+        }
+    }
 }

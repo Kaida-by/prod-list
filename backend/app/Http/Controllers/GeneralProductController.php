@@ -2,26 +2,39 @@
 
 namespace App\Http\Controllers;
 
-use App\Data\RequestData\CommentDataRequest;
-use App\Models\Comment;
+use App\Data\RequestData\GeneralProductDataRequest;
+use App\Data\ResourceData\GeneralProductDataResource;
+use App\Models\GeneralProduct;
 use Exception;
 use Illuminate\Http\JsonResponse;
 
-class CommentController extends Controller
+class GeneralProductController extends Controller
 {
-    public function __construct(protected Comment $comment) {}
+    public function __construct(
+        protected GeneralProduct $generalProduct,
+    ) {}
+
+    public function getAllProducts()
+    {
+        $generalProducts = GeneralProduct::where('user_id', auth()->id())
+            ->simplePaginate(10);
+
+        return response()->json([
+            'data' => GeneralProductDataResource::collection($generalProducts),
+        ]);
+    }
 
     public function one(int $id): ?JsonResponse
     {
         try {
-            $comments = Comment::where([
+            $product = GeneralProduct::where([
                 'id' => $id,
                 'user_id' => auth()->id()
             ])->first();
 
             return response()->json([
                 'success' => true,
-                'data' => CommentDataRequest::from($comments)
+                'data' => GeneralProductDataRequest::from($product)
             ]);
         } catch (Exception $exeption) {
             return response()->json([
@@ -31,17 +44,17 @@ class CommentController extends Controller
         }
     }
 
-    public function create(CommentDataRequest $commentDataRequest): ?JsonResponse
+    public function create(GeneralProductDataRequest $generalProductDataRequest): ?JsonResponse
     {
-        $this->comment->text = $commentDataRequest->text;
-        $this->comment->user_id = auth()->id();
+        $this->generalProduct->name = $generalProductDataRequest->name;
+        $this->generalProduct->user_id = auth()->id();
 
         try {
-            $this->comment->save();
+            $this->generalProduct->save();
 
             return response()->json([
                 'success' => true,
-                'data' => $this->comment,
+                'data' => $this->generalProduct,
             ], 201);
         } catch (Exception $exception) {
             return response()->json([
@@ -51,17 +64,17 @@ class CommentController extends Controller
         }
     }
 
-    public function update(CommentDataRequest $commentDataRequest, Comment $comment): ?JsonResponse
+    public function update(GeneralProductDataRequest $generalProductDataRequest, GeneralProduct $generalProduct): ?JsonResponse
     {
         try {
-            $comment->update([
-                'text' => $commentDataRequest->text,
+            $generalProduct->update([
+                'name' => $generalProductDataRequest->name,
                 'user_id' => auth()->id(),
             ]);
 
             return response()->json([
                 'success' => true,
-                'data' => $this->comment,
+                'data' => $this->generalProduct,
             ]);
         } catch (Exception $exception) {
             return response()->json([
@@ -71,10 +84,10 @@ class CommentController extends Controller
         }
     }
 
-    public function delete(Comment $comment): ?JsonResponse
+    public function delete(GeneralProduct $generalProduct): ?JsonResponse
     {
         try {
-            $comment->delete();
+            $generalProduct->delete();
 
             return response()->json([
                 'success' => true,

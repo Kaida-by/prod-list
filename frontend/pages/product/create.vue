@@ -4,8 +4,25 @@
       <div class="bg-white w-full rounded-lg pt-12 pb-7">
         <h1 class="text-center w-full pb-5 text-2xl">Create Product!</h1>
         <el-form :model="form" status-icon ref="form" class="flex flex-col justify-center items-center">
-          <el-form-item prop="name" class="w-3/5">
-            <el-input placeholder="Name" type="name" v-model="form.name"></el-input>
+          <el-form-item prop="name">
+            <el-select
+                v-model="form.name"
+                filterable
+                allow-create
+                default-first-option
+                :reserve-keyword="false"
+                placeholder="Name"
+                style="width: 240px"
+                no-data-text="No data"
+            >
+              <el-option
+                  v-for="general_product in general_products"
+                  :key="general_product.name"
+                  :label="general_product.name"
+                  :value="general_product.name"
+              />
+            </el-select>
+<!--            <el-input placeholder="Name" type="name" v-model="form.name"></el-input>-->
             <span class="is_invalid" v-if="err.name"> {{ err.name[0] }}</span>
           </el-form-item>
           <p>Your Product Types:</p>
@@ -65,6 +82,7 @@ export default {
       err: {},
       type_products: [],
       type_counts: [],
+      general_products: []
     }
   },
   methods: {
@@ -101,11 +119,19 @@ export default {
         console.log(e)
         return
       }
+    },
+    async fetchGeneralProducts() {
+      await this.$axios.get('/general-products/get')
+          .then((res) => {
+            this.general_products = res.data.data.data
+          })
+          .catch(err => console.log(err))
     }
   },
   mounted() {
     this.fetchTypeProducts()
     this.fetchTypeCounts()
+    this.fetchGeneralProducts()
   }
 }
 </script>
