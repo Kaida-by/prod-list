@@ -41,10 +41,10 @@ Route::group(['middleware' => 'jwt.auth'], static function () {
     Route::delete('/product/delete/{product}', [ProductController::class, 'delete']);
         //GeneralProducts
         Route::get('/general-products/get', [GeneralProductController::class, 'getAllProducts']);
-        Route::get('/general-products/{id}', [GeneralProductController::class, 'one']);
-        Route::post('/general-products/create', [GeneralProductController::class, 'create']);
-        Route::patch('/general-products/update/{product}', [GeneralProductController::class, 'update']);
-        Route::delete('/general-products/delete/{product}', [GeneralProductController::class, 'delete']);
+        Route::get('/general-product/{id}', [GeneralProductController::class, 'one']);
+        Route::post('/general-product/create', [GeneralProductController::class, 'create']);
+        Route::patch('/general-product/update/{generalProduct}', [GeneralProductController::class, 'update']);
+        Route::delete('/general-product/delete/{generalProduct}', [GeneralProductController::class, 'delete']);
 
     //ProductList
     Route::get('/product-lists/get', [ProductListController::class, 'index']);
@@ -61,10 +61,10 @@ Route::group(['middleware' => 'jwt.auth'], static function () {
     Route::delete('/type-product/delete/{typeProduct}', [TypeProductController::class, 'delete']);
         //GeneralTypeProducts
         Route::get('/general-type-products/get', [GeneralTypeProductController::class, 'getAllTypeProducts']);
-        Route::get('/general-type-products/{id}', [GeneralTypeProductController::class, 'one']);
-        Route::post('/general-type-products/create', [GeneralTypeProductController::class, 'create']);
-        Route::patch('/general-type-products/update/{typeProduct}', [GeneralTypeProductController::class, 'update']);
-        Route::delete('/general-type-products/delete/{typeProduct}', [GeneralTypeProductController::class, 'delete']);
+        Route::get('/general-type-product/{id}', [GeneralTypeProductController::class, 'one']);
+        Route::post('/general-type-product/create', [GeneralTypeProductController::class, 'create']);
+        Route::patch('/general-type-product/update/{generalTypeProduct}', [GeneralTypeProductController::class, 'update']);
+        Route::delete('/general-type-product/delete/{generalTypeProduct}', [GeneralTypeProductController::class, 'delete']);
 
     //Comment
     Route::get('/comment/{id}', [CommentController::class, 'one']);

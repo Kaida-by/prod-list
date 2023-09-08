@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $user_id
  * @property string $created_at
  * @property string $updated_at
- * @method findOrFail(int $int)
+ * @method static findOrFail(int $int)
  */
 class GeneralProduct extends Model
 {
@@ -24,6 +24,5 @@ class GeneralProduct extends Model
 
     protected $dates = [
         'created_at',
-        'updated_at',
     ];
 }
