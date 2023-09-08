@@ -86,19 +86,19 @@ class ProductListController extends Controller
         }
     }
 
-     public function delete(ProductList $productList): ?JsonResponse
-     {
-         try {
-             $productList->delete();
+    public function delete(ProductList $productList): ?JsonResponse
+    {
+        try {
+            $productList->delete();
 
-             return response()->json([
-                 'success' => true,
-             ], 204);
-         } catch (Exception $exception) {
-             return response()->json([
-                 'success' => false,
-                 'msg' => $exception->getMessage(),
-             ]);
-         }
-     }
+            return response()->json([
+                'success' => true,
+            ], 204);
+        } catch (Exception $exception) {
+            return response()->json([
+                'success' => false,
+                'msg' => $exception->getMessage(),
+            ]);
+        }
+    }
 }
