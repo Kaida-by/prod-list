@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
 /**
  * @property int $id
@@ -11,6 +12,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $user_id
  * @property string $created_at
  * @property string $updated_at
+ * @property-read Collection | TypeProduct|null $typeProduct
+ * @property-read Collection | Product|null $product
  * @method static findOrFail(int $int)
  */
 class ProductList extends Model
@@ -25,4 +28,9 @@ class ProductList extends Model
     protected $dates = [
         'created_at',
     ];
+
+    public function typeProduct()
+    {
+        return $this->hasMany(TypeProduct::class, 'product_list_id');
+    }
 }

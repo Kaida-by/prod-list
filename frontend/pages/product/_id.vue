@@ -13,6 +13,7 @@
               v-model="form.type_product_id"
               placeholder="Select"
               style="width: 240px"
+              no-data-text="No data"
           >
             <el-option
                 v-for="type_product in type_products"

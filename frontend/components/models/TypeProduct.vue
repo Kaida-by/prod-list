@@ -1,9 +1,9 @@
 <template>
-  <div class="container mx-auto align-middle flex w-100">
-    <div class="sm:mx-auto w-2/5 h-full flex flex-col items-center justify-center">
-      <div class="bg-white w-full rounded-lg pt-12 pb-7">
-        <el-form :model="form" status-icon ref="form" class="flex flex-col justify-center items-center">
-          <el-form-item prop="name">
+  <div class="container mx-auto align-middle flex w-full">
+    <div class="sm:mx-auto w-full h-full flex flex-col items-center justify-center w-full">
+      <div class="bg-white w-full rounded-lg pt-1 pb-1 w-full">
+        <el-form :model="form" status-icon ref="form" class="flex flex-col justify-center items-center w-full">
+          <el-form-item prop="name" class="w-full">
             <el-select
                 v-model="form.name"
                 filterable
@@ -11,8 +11,8 @@
                 default-first-option
                 :reserve-keyword="false"
                 placeholder="Name"
-                style="width: 240px"
                 no-data-text="No data"
+                class="w-full"
             >
               <el-option
                   v-for="general_type_product in general_type_products"
@@ -21,25 +21,17 @@
                   :value="general_type_product.name"
               />
             </el-select>
-<!--            <el-input placeholder="Name" type="name" v-model="form.name"></el-input>-->
+
             <span class="is_invalid" v-if="err.name"> {{ err.name[0] }}</span>
+            <div class="all_prods">
+              <span>Select Your Products: </span>
+              <product></product>
+            </div>
+
           </el-form-item>
-          <p>Your Product Lists:</p>
-          <el-select
-              v-model="form.product_list_id"
-              placeholder="Select"
-              style="width: 240px"
-          >
-            <el-option
-                v-for="prod_list in prod_lists"
-                :key="prod_list.name"
-                :label="prod_list.name"
-                :value="prod_list.id"
-            />
-          </el-select>
-          <el-form-item class="mb-0 text-center w-3/5">
+          <el-form-item class="mb-0 text-center w-full">
             <el-button type="primary" @click="create('form')" class="px-6 w-full">
-              Create!
+              +
             </el-button>
           </el-form-item>
         </el-form>
@@ -50,9 +42,14 @@
 
 <script>
 
+import Product from "./Product";
+
 export default {
-  name: "create",
+  name: "TypeProduct",
   middleware: 'auth',
+  components: {
+    Product
+  },
 
   data() {
     return {
@@ -62,7 +59,6 @@ export default {
         product_list_id: '',
       },
       err: {},
-      prod_lists: [],
       general_type_products: [],
     }
   },
@@ -77,18 +73,6 @@ export default {
         return;
       }
     },
-    async fetchProdList() {
-      try {
-        await this.$axios.get('product-lists/get')
-            .then((res) => {
-              this.prod_lists = res.data.data.data
-            })
-            .catch(err => console.log(err))
-      } catch (e) {
-        console.log(e)
-        return
-      }
-    },
     async fetchGeneralTypeProducts() {
       await this.$axios.get('/general-type-products/get')
           .then((res) => {
@@ -98,7 +82,6 @@ export default {
     }
   },
   mounted() {
-    this.fetchProdList()
     this.fetchGeneralTypeProducts()
   }
 }

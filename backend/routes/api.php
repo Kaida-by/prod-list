@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\GeneralProductController;
 use App\Http\Controllers\GeneralTypeProductController;
+use App\Http\Controllers\GenerateProductListController;
 use App\Http\Controllers\HelpController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductListController;
@@ -74,4 +75,6 @@ Route::group(['middleware' => 'jwt.auth'], static function () {
 
     //GetSomeEntities
     Route::get('/type-counts/get', [HelpController::class, 'getTypeCounts']);
+    //Generate Product List
+    Route::post('/product-list/generate', [GenerateProductListController::class, 'generate']);
 });
