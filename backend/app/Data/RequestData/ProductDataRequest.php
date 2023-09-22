@@ -19,4 +19,5 @@ class ProductDataRequest extends Data
     public int $type_count_id;
     #[Nullable, IntegerType, Max(999999999)]
     public ?int $comment_id;
+    public ?CommentDataRequest $comment;
 }

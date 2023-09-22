@@ -47,4 +47,9 @@ class Product extends Model
     {
         return $this->hasOne(TypeProduct::class, 'id', 'type_product_id');
     }
+
+    public function comment(): HasOne
+    {
+        return $this->hasOne(Comment::class, 'id', 'comment_id');
+    }
 }

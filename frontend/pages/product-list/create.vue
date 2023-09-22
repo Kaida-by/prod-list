@@ -70,21 +70,39 @@
                           :value="type_count.id"
                         />
                       </el-select>
-                      <el-button type="primary" @click="addInputProduct(indx)" class="px-6 w-full">
-                        +
-                      </el-button>
+                      <template>
+                        <el-input
+                            v-model="product.comment.text"
+                            :rows="2"
+                            type="textarea"
+                            placeholder="Comment"
+                        />
+                      </template>
+                      <div class="pl_btn_bl gutter">
+                        <el-button type="primary" @click="addInputProduct(indx)" class="px-6">
+                          + p
+                        </el-button>
+                        <el-button type="danger" @click="removeInputProduct(indx, product.id, index)" class="px-6">
+                          - p
+                        </el-button>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
 <!--------------------------------------------------------------------------------------------------------------------->
-              <el-button type="primary" @click="addInputTypeProduct" class="px-6 w-full">
-                +
+            <div class="pl_btn_bl gutter">
+              <el-button type="primary" @click="addInputTypeProduct" class="px-6">
+                + tp
               </el-button>
+              <el-button type="danger" @click="removeInputTypeProduct(indx, productType.id)" class="px-6">
+                - tp
+              </el-button>
+            </div>
           </div>
 <!--------------------------------------------------------------------------------------------------------------------->
           <el-form-item class="mb-0 text-center w-3/5">
-            <el-button type="primary" @click="create('form')" class="px-6 w-full">
+            <el-button type="success" @click="create('form')" class="px-6 w-full">
               Generate!
             </el-button>
           </el-form-item>
@@ -112,6 +130,9 @@ export default {
               count: '',
               type_count_id: '',
               comment_id: '',
+              comment: {
+                text: '',
+              },
             }
           ],
         }],
@@ -167,6 +188,9 @@ export default {
         comment_id: '',
       });
     },
+    async removeInputProduct(typeProductIndex, productId, productIndex) {
+      this.form.typeProducts[typeProductIndex].products.splice(productIndex, 1);
+    },
     async addInputTypeProduct() {
       this.form.typeProducts.push({
         name: '',
@@ -179,6 +203,9 @@ export default {
           }
         ],
       });
+    },
+    async removeInputTypeProduct(index, indexTypeProduct) {
+      this.form.typeProducts.splice(index, 1);
     },
   },
   mounted() {
