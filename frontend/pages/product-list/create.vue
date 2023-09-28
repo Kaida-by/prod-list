@@ -186,6 +186,9 @@ export default {
         count: '',
         type_count_id: '',
         comment_id: '',
+        comment: {
+          text: '',
+        },
       });
     },
     async removeInputProduct(typeProductIndex, productId, productIndex) {
@@ -200,6 +203,9 @@ export default {
             count: '',
             type_count_id: '',
             comment_id: '',
+            comment: {
+              text: '',
+            },
           }
         ],
       });

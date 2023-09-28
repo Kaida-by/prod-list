@@ -72,7 +72,8 @@
                     </el-select>
                     <template>
                       <el-input
-                          v-model="product.comment.text"
+                          :value="getCommentText(product.comment)"
+                          @input="updateCommentText(product, $event.target.value)"
                           :rows="2"
                           type="textarea"
                           placeholder="Comment"
@@ -188,6 +189,9 @@ export default {
         count: '',
         type_count_id: '',
         comment_id: '',
+        comment: {
+          text: '',
+        },
       });
     },
     async removeInputProduct(typeProductIndex, productId, productIndex) {
@@ -203,6 +207,9 @@ export default {
             count: '',
             type_count_id: '',
             comment_id: '',
+            comment: {
+              text: '',
+            },
           }
         ],
       });
@@ -250,6 +257,15 @@ export default {
       } catch(e) {
         return;
       }
+    },
+    getCommentText(comment) {
+      return comment && comment.text ? comment.text : '';
+    },
+    updateCommentText(product, text) {
+      if (!product.comment) {
+        product.comment = {};
+      }
+      product.comment.text = text;
     },
   },
   mounted () {

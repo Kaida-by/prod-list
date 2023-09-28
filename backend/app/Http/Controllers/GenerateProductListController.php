@@ -55,28 +55,33 @@ class GenerateProductListController extends Controller
             }
 
             foreach ($typeProduct->products as $product) {
-                $comment = new Comment();
-                $comment->text = $product->comment->text;
-                $comment->user_id = $userId;
 
-                try {
-                    $comment->save();
-                } catch (Exception $exception) {
-                    return response()->json([
-                        'success' => false,
-                        'errors' => [
-                            'name' => [
-                                $exception->getMessage()
-                            ]
-                        ],
-                    ]);
+                if ($product->comment->text) {
+                    $comment = new Comment();
+                    $comment->text = $product->comment->text;
+                    $comment->user_id = $userId;
+
+                    try {
+                        $comment->save();
+                    } catch (Exception $exception) {
+                        return response()->json([
+                            'success' => false,
+                            'errors' => [
+                                'name' => [
+                                    $exception->getMessage()
+                                ]
+                            ],
+                        ]);
+                    }
+                } else {
+                    $comment = null;
                 }
 
                 $newProduct = new Product();
                 $newProduct->name = $product->name;
                 $newProduct->count = $product->count;
                 $newProduct->type_count_id = $product->type_count_id;
-                $newProduct->comment_id = $comment->id;
+                $newProduct->comment_id = $comment?->id;
                 $newProduct->type_product_id = $newTypeProduct->id;
                 $newProduct->user_id = $userId;
 

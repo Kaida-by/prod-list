@@ -84,7 +84,7 @@ class ProductListController extends Controller
 
             foreach ($productListDataRequest->typeProducts as $key => $typeProduct) {
                 try {
-                    if (array_key_exists($key, (array) $productList->typeProducts)) {
+                    if (array_key_exists($key, $productList->typeProducts->toArray())) {
                         $productList->typeProducts[$key]->update([
                             'name' => $typeProduct->name,
                             'user_id' => $userId,
@@ -113,36 +113,66 @@ class ProductListController extends Controller
 //                dd($productList->typeProducts[$key]->products, $typeProduct->products);
 
                 foreach ($typeProduct->products as $keyPr => $product) {
-                    if (array_key_exists($keyPr, ))
-
-
-                    foreach ($productList->typeProducts as $tp) {
-                        try {
-                            $comment = $product->comment->update([
-                                'text' => $product->comment->text,
-                                'user_id' => $userId,
-                            ]);
-
-                            $product->update([
+                    try {
+                        if (array_key_exists($key, $productList->typeProducts->toArray()) &&
+                            array_key_exists($keyPr, $productList->typeProducts[$key]->products->toArray())) {
+                            $productList->typeProducts[$key]->products[$keyPr]->update([
                                 'name' => $product->name,
                                 'count' => $product->count,
+                                'comment_id' => $product->comment_id,
                                 'type_count_id' => $product->type_count_id,
-                                'comment_id' => $comment->id,
-                                'type_product_id' => $tp->id,
+                                'type_product_id' => $productList->typeProducts[$key]->id,
                                 'user_id' => $userId,
                             ]);
-                        } catch (Exception $exception) {
-                            dd($exception->getMessage());
-                            return response()->json([
-                                'success' => false,
-                                'errors' => [
-                                    'name' => [
-                                        $exception->getMessage()
-                                    ]
-                                ],
+                        } else {
+                            Product::create([
+                                'name' => $product->name,
+                                'count' => $product->count,
+                                'comment_id' => $product->comment_id,
+                                'type_count_id' => $product->type_count_id,
+                                'type_product_id' => $productList->typeProducts[$key]->id,
+                                'user_id' => $userId,
                             ]);
                         }
+                    } catch (Exception $exception) {
+                        dd($exception->getMessage());
+                        return response()->json([
+                            'success' => false,
+                            'errors' => [
+                                'name' => [
+                                    $exception->getMessage()
+                                ]
+                            ],
+                        ]);
                     }
+
+//                    foreach ($productList->typeProducts as $tp) {
+//                        try {
+//                            $comment = $product->comment->update([
+//                                'text' => $product->comment->text,
+//                                'user_id' => $userId,
+//                            ]);
+//
+//                            $product->update([
+//                                'name' => $product->name,
+//                                'count' => $product->count,
+//                                'type_count_id' => $product->type_count_id,
+//                                'comment_id' => $comment->id,
+//                                'type_product_id' => $tp->id,
+//                                'user_id' => $userId,
+//                            ]);
+//                        } catch (Exception $exception) {
+//                            dd($exception->getMessage());
+//                            return response()->json([
+//                                'success' => false,
+//                                'errors' => [
+//                                    'name' => [
+//                                        $exception->getMessage()
+//                                    ]
+//                                ],
+//                            ]);
+//                        }
+//                    }
                 }
             }
 
