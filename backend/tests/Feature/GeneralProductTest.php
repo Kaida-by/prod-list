@@ -38,13 +38,13 @@ class GeneralProductTest extends TestCase
 
         $this->withHeaders([
             'Authorization' => 'Bearer '. $this->token,
-        ])->postJson('api/general-products/create', $data);
+        ])->postJson('api/general-product/create', $data);
 
         $generalProduct = GeneralProduct::where('user_id', auth()->id())->first();
 
         $response = $this->withHeaders([
             'Authorization' => 'Bearer '. $this->token,
-        ])->getJson('api/general-products/' . $generalProduct->id);
+        ])->getJson('api/general-product/' . $generalProduct->id);
         $response->assertStatus(200);
     }
 
@@ -56,7 +56,7 @@ class GeneralProductTest extends TestCase
         ];
         $response = $this->withHeaders([
             'Authorization' => 'Bearer '. $this->token,
-        ])->postJson('api/general-products/create', $data);
+        ])->postJson('api/general-product/create', $data);
         $response->assertStatus(201);
     }
 
@@ -70,7 +70,7 @@ class GeneralProductTest extends TestCase
         ];
         $response = $this->withHeaders([
             'Authorization' => 'Bearer '. $this->token,
-        ])->patchJson('api/general-products/update/' . $generalProduct->id, $data);
+        ])->patchJson('api/general-product/update/' . $generalProduct->id, $data);
         $response->assertStatus(200);
     }
 
@@ -79,7 +79,7 @@ class GeneralProductTest extends TestCase
         $generalProduct = GeneralProduct::findOrFail(1);
         $response = $this->withHeaders([
             'Authorization' => 'Bearer '. $this->token,
-        ])->deleteJson('api/general-products/delete/' . $generalProduct->id);
+        ])->deleteJson('api/general-product/delete/' . $generalProduct->id);
         $response->assertStatus(204);
     }
 }
