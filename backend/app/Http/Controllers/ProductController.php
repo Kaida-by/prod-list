@@ -51,9 +51,9 @@ class ProductController extends Controller
         $this->product->name = $productDataRequest->name;
         $this->product->count = $productDataRequest->count;
         $this->product->type_count_id = $productDataRequest->type_count_id;
-        $this->product->comment_id = $productDataRequest->comment_id;
         $this->product->type_product_id = $productDataRequest->type_product_id;
         $this->product->user_id = auth()->id();
+        $this->product->comment = $productDataRequest->comment;
 
         try {
             $this->product->save();
@@ -86,9 +86,9 @@ class ProductController extends Controller
                 'name' => $productDataRequest->name,
                 'count' => $productDataRequest->count,
                 'type_count_id' => $productDataRequest->type_count_id,
-                'comment_id' => $productDataRequest->comment_id,
                 'type_product_id' => $productDataRequest->type_product_id,
                 'user_id' => auth()->id(),
+                'comment' => $productDataRequest->comment,
             ]);
 
             $generalProduct->update([

@@ -60,7 +60,6 @@ export default {
         name: '',
         count: '',
         type_count_id: '',
-        comment_id: '',
         type_product_id: '',
         user_id: this.$auth.user.id,
       },

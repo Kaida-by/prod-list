@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Data\RequestData\ProductListDataRequest;
-use App\Models\Comment;
+use App\Models\GeneralProduct;
+use App\Models\GeneralTypeProduct;
 use App\Models\Product;
 use App\Models\ProductList;
 use App\Models\TypeProduct;
@@ -41,8 +42,21 @@ class GenerateProductListController extends Controller
             $newTypeProduct->user_id = $userId;
             $newTypeProduct->product_list_id = $this->productList->id;
 
+            $isGeneralTypeProduct = GeneralTypeProduct::where(['name' => $typeProduct->name, 'user_id' => $userId])
+                ->first();
+
+            if (!$isGeneralTypeProduct) {
+                $newGeneralTypeProduct = new GeneralTypeProduct();
+                $newGeneralTypeProduct->name = $typeProduct->name;
+                $newGeneralTypeProduct->user_id = $userId;
+            }
+
             try {
                 $newTypeProduct->save();
+
+                if (!$isGeneralTypeProduct) {
+                    $newGeneralTypeProduct->save();
+                }
             } catch (Exception $exception) {
                 return response()->json([
                     'success' => false,
@@ -56,37 +70,29 @@ class GenerateProductListController extends Controller
 
             foreach ($typeProduct->products as $product) {
 
-                if ($product->comment->text) {
-                    $comment = new Comment();
-                    $comment->text = $product->comment->text;
-                    $comment->user_id = $userId;
-
-                    try {
-                        $comment->save();
-                    } catch (Exception $exception) {
-                        return response()->json([
-                            'success' => false,
-                            'errors' => [
-                                'name' => [
-                                    $exception->getMessage()
-                                ]
-                            ],
-                        ]);
-                    }
-                } else {
-                    $comment = null;
-                }
-
                 $newProduct = new Product();
                 $newProduct->name = $product->name;
                 $newProduct->count = $product->count;
                 $newProduct->type_count_id = $product->type_count_id;
-                $newProduct->comment_id = $comment?->id;
                 $newProduct->type_product_id = $newTypeProduct->id;
                 $newProduct->user_id = $userId;
+                $newProduct->comment = $product->comment;
+
+                $isGeneralProduct = GeneralProduct::where(['name' => $product->name, 'user_id' => $userId])
+                    ->first();
+
+                if (!$isGeneralProduct) {
+                    $newGeneralProduct = new GeneralProduct();
+                    $newGeneralProduct->name = $product->name;
+                    $newGeneralProduct->user_id = $userId;
+                }
 
                 try {
                     $newProduct->save();
+
+                    if (!$isGeneralProduct) {
+                        $newGeneralProduct->save();
+                    }
                 } catch (Exception $exception) {
                     return response()->json([
                         'success' => false,
@@ -104,23 +110,5 @@ class GenerateProductListController extends Controller
             'success' => true,
             'data' => $this->productList,
         ], 201);
-
-//        try {
-//            $this->productList->save();
-//
-//            return response()->json([
-//                'success' => true,
-//                'data' => $this->productList,
-//            ], 201);
-//        } catch (Exception $exception) {
-//            return response()->json([
-//                'success' => false,
-//                'errors' => [
-//                    'name' => [
-//                        $exception->getMessage()
-//                    ]
-//                ],
-//            ]);
-//        }
     }
 }

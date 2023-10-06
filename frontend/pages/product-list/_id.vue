@@ -72,12 +72,11 @@
                     </el-select>
                     <template>
                       <el-input
-                          :value="getCommentText(product.comment)"
-                          @input="updateCommentText(product, $event.target.value)"
+                          v-model="product.comment"
                           :rows="2"
                           type="textarea"
                           placeholder="Comment"
-                      />
+                      ></el-input>
                     </template>
                     <div class="pl_btn_bl gutter">
                       <el-button type="primary" @click="addInputProduct(indx)" class="px-6">
@@ -132,10 +131,7 @@ export default {
               name: '',
               count: '',
               type_count_id: '',
-              comment_id: '',
-              comment: {
-                text: '',
-              },
+              comment: '',
             }
           ],
         }],
@@ -143,7 +139,7 @@ export default {
       err: {},
       general_type_products: [],
       general_products: [],
-      type_counts: []
+      type_counts: [],
     }
   },
   methods: {
@@ -188,10 +184,7 @@ export default {
         name: '',
         count: '',
         type_count_id: '',
-        comment_id: '',
-        comment: {
-          text: '',
-        },
+        comment: '',
       });
     },
     async removeInputProduct(typeProductIndex, productId, productIndex) {
@@ -206,10 +199,7 @@ export default {
             name: '',
             count: '',
             type_count_id: '',
-            comment_id: '',
-            comment: {
-              text: '',
-            },
+            comment: '',
           }
         ],
       });
@@ -257,15 +247,6 @@ export default {
       } catch(e) {
         return;
       }
-    },
-    getCommentText(comment) {
-      return comment && comment.text ? comment.text : '';
-    },
-    updateCommentText(product, text) {
-      if (!product.comment) {
-        product.comment = {};
-      }
-      product.comment.text = text;
     },
   },
   mounted () {

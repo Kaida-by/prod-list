@@ -72,7 +72,7 @@
                       </el-select>
                       <template>
                         <el-input
-                            v-model="product.comment.text"
+                            v-model="product.comment"
                             :rows="2"
                             type="textarea"
                             placeholder="Comment"
@@ -129,10 +129,7 @@ export default {
               name: '',
               count: '',
               type_count_id: '',
-              comment_id: '',
-              comment: {
-                text: '',
-              },
+              comment: '',
             }
           ],
         }],
@@ -185,10 +182,7 @@ export default {
         name: '',
         count: '',
         type_count_id: '',
-        comment_id: '',
-        comment: {
-          text: '',
-        },
+        comment: '',
       });
     },
     async removeInputProduct(typeProductIndex, productId, productIndex) {
@@ -202,10 +196,7 @@ export default {
             name: '',
             count: '',
             type_count_id: '',
-            comment_id: '',
-            comment: {
-              text: '',
-            },
+            comment: '',
           }
         ],
       });

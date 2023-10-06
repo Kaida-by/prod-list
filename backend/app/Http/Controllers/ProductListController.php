@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Data\RequestData\ProductListDataRequest;
 use App\Data\ResourceData\ProductListDataResource;
-use App\Models\Comment;
+use App\Models\GeneralProduct;
+use App\Models\GeneralTypeProduct;
 use App\Models\Product;
 use App\Models\ProductList;
 use App\Models\TypeProduct;
@@ -33,7 +34,7 @@ class ProductListController extends Controller
                 'id' => $id,
                 'user_id' => auth()->id()
             ])
-                ->with('typeProducts.products.comment')
+                ->with('typeProducts.products')
                 ->first();
 
             return response()->json([
@@ -91,14 +92,25 @@ class ProductListController extends Controller
                             'product_list_id' => $productList->id,
                         ]);
                     } else {
-                        TypeProduct::create([
+                        $tp = TypeProduct::create([
                             'name' => $typeProduct->name,
                             'user_id' => $userId,
                             'product_list_id' => $productList->id,
                         ]);
+
+                        $isGeneralTypeProduct = GeneralTypeProduct::where(['name' => $typeProduct->name, 'user_id' => $userId])
+                            ->first();
+
+                        if (!$isGeneralTypeProduct) {
+                            GeneralTypeProduct::create([
+                                'name' => $typeProduct->name,
+                                'user_id' => $userId,
+                            ]);
+                        }
+
+                        $productList->typeProducts->add($tp);
                     }
                 } catch (Exception $exception) {
-                    dd($exception->getMessage());
                     return response()->json([
                         'success' => false,
                         'errors' => [
@@ -109,33 +121,40 @@ class ProductListController extends Controller
                     ]);
                 }
 
-
-//                dd($productList->typeProducts[$key]->products, $typeProduct->products);
-
                 foreach ($typeProduct->products as $keyPr => $product) {
                     try {
                         if (array_key_exists($key, $productList->typeProducts->toArray()) &&
                             array_key_exists($keyPr, $productList->typeProducts[$key]->products->toArray())) {
+
                             $productList->typeProducts[$key]->products[$keyPr]->update([
                                 'name' => $product->name,
                                 'count' => $product->count,
-                                'comment_id' => $product->comment_id,
                                 'type_count_id' => $product->type_count_id,
                                 'type_product_id' => $productList->typeProducts[$key]->id,
                                 'user_id' => $userId,
+                                'comment' => $product->comment,
                             ]);
                         } else {
+                            $isGeneralProduct = GeneralProduct::where(['name' => $product->name, 'user_id' => $userId])
+                                ->first();
                             Product::create([
                                 'name' => $product->name,
                                 'count' => $product->count,
-                                'comment_id' => $product->comment_id,
                                 'type_count_id' => $product->type_count_id,
                                 'type_product_id' => $productList->typeProducts[$key]->id,
                                 'user_id' => $userId,
+                                'comment' => $product->comment,
                             ]);
+
+                            if (!$isGeneralProduct) {
+                                GeneralProduct::create([
+                                    'name' => $product->name,
+                                    'user_id' => $userId,
+                                ]);
+                            }
+
                         }
                     } catch (Exception $exception) {
-                        dd($exception->getMessage());
                         return response()->json([
                             'success' => false,
                             'errors' => [
@@ -145,34 +164,6 @@ class ProductListController extends Controller
                             ],
                         ]);
                     }
-
-//                    foreach ($productList->typeProducts as $tp) {
-//                        try {
-//                            $comment = $product->comment->update([
-//                                'text' => $product->comment->text,
-//                                'user_id' => $userId,
-//                            ]);
-//
-//                            $product->update([
-//                                'name' => $product->name,
-//                                'count' => $product->count,
-//                                'type_count_id' => $product->type_count_id,
-//                                'comment_id' => $comment->id,
-//                                'type_product_id' => $tp->id,
-//                                'user_id' => $userId,
-//                            ]);
-//                        } catch (Exception $exception) {
-//                            dd($exception->getMessage());
-//                            return response()->json([
-//                                'success' => false,
-//                                'errors' => [
-//                                    'name' => [
-//                                        $exception->getMessage()
-//                                    ]
-//                                ],
-//                            ]);
-//                        }
-//                    }
                 }
             }
 

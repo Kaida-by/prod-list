@@ -69,12 +69,6 @@ Route::group(['middleware' => 'jwt.auth'], static function () {
         Route::patch('/general-type-product/update/{generalTypeProduct}', [GeneralTypeProductController::class, 'update']);
         Route::delete('/general-type-product/delete/{generalTypeProduct}', [GeneralTypeProductController::class, 'delete']);
 
-    //Comment
-    Route::get('/comment/{id}', [CommentController::class, 'one']);
-    Route::post('/comment/create', [CommentController::class, 'create']);
-    Route::patch('/comment/update/{typeProduct}', [CommentController::class, 'update']);
-    Route::delete('/comment/delete/{typeProduct}', [CommentController::class, 'delete']);
-
     //GetSomeEntities
     Route::get('/type-counts/get', [HelpController::class, 'getTypeCounts']);
     //Generate Product List

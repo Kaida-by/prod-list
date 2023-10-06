@@ -12,9 +12,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $name
  * @property int $count
  * @property int $type_count_id
- * @property int $comment_id
  * @property int $type_product_id
  * @property int $user_id
+ * @property string $comment
  * @property string $created_at
  * @property string $updated_at
  * @property-read TypeCount|null typeCount
@@ -29,9 +29,9 @@ class Product extends Model
         'name',
         'count',
         'type_count_id',
-        'comment_id',
         'type_product_id',
         'user_id',
+        'comment',
     ];
 
     protected $dates = [
@@ -46,10 +46,5 @@ class Product extends Model
     public function typeProduct(): HasOne
     {
         return $this->hasOne(TypeProduct::class, 'id', 'type_product_id');
-    }
-
-    public function comment(): HasOne
-    {
-        return $this->hasOne(Comment::class, 'id', 'comment_id');
     }
 }

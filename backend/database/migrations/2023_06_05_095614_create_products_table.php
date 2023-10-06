@@ -15,15 +15,14 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('count');
-            $table->unsignedBigInteger('comment_id')->nullable();
             $table->unsignedBigInteger('type_count_id');
             $table->unsignedBigInteger('type_product_id');
             $table->unsignedBigInteger('user_id');
+            $table->text('comment')->nullable();
             $table->softDeletes();
             $table->timestamps();
 
             $table->foreign('type_count_id')->references('id')->on('type_counts')->onDelete('cascade');
-            $table->foreign('comment_id')->references('id')->on('comments')->onDelete('cascade');
             $table->foreign('type_product_id')->references('id')->on('type_products')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });

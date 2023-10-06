@@ -53,6 +53,12 @@
                 :value="type_count.id"
             />
           </el-select>
+          <el-input
+              v-model="form.comment"
+              :rows="2"
+              type="textarea"
+              placeholder="Comment"
+          ></el-input>
           <el-form-item class="mb-0 text-center w-3/5">
             <el-button type="primary" @click="create('form')" class="px-6 w-full">
               Create!
@@ -75,9 +81,9 @@ export default {
         name: '',
         count: '',
         type_count_id: '',
-        comment_id: '',
         type_product_id: '',
         user_id: this.$auth.user.id,
+        comment: '',
       },
       err: {},
       type_products: [],
