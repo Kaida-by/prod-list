@@ -1,33 +1,35 @@
 <template>
   <div class="container">
-    <div class="">
-      <div class="">
+    <div class="prod_list_container">
+      <div class="prod_list_general">
         <h1 class="">{{ form.name }}</h1>
-        <el-form :model="form" status-icon ref="form">
+        <el-form :model="form" status-icon ref="form" class="prod_list_form">
           <!--------------------------------------------------------------------------------------------------------------------->
-          <div v-for="(productType, indx) in form.typeProducts" :key="indx">
-            <div>{{ productType.name }}</div>
-            <!--------------------------------------------------------------------------------------------------------------------->
-            <div class="all_prods">
-              <div v-for="(product, index) in productType.products" :key="index">
-                <div class="prod_name">{{ product.name }}</div>
-                <div class="prod_count">
-                  <span>{{ product.count }}</span> - <span>{{ getProductTypeName(product.type_count_id) }}</span>
-                </div>
-                <div class="prod_comment">
-                  {{ product.comment }}
-                </div>
-                <el-button type="danger" @click="removeInputProduct(indx, product.id, index)">
-                  - p
-                </el-button>
+          <div v-for="(productType, indx) in form.typeProducts" :key="indx" class="general_type">
+            <div class="type_prod_block">
+              <div class="prod_list_header">{{ productType.name }}</div>
+              <div class="prod_list_btn gutter">
+                <el-button type="danger" @click="removeInputTypeProduct(indx, productType.id)">X</el-button>
               </div>
             </div>
             <!--------------------------------------------------------------------------------------------------------------------->
-            <div class="pl_btn_bl gutter">
-              <el-button type="danger" @click="removeInputTypeProduct(indx, productType.id)">
-                - tp
-              </el-button>
+            <div class="all_prods">
+              <div v-for="(product, index) in productType.products" :key="index" class="prod">
+                <div class="prod_f">
+                  <div class="prod_name">Name: {{ product.name }}</div>
+                  <div class="prod_count">
+                    <span>Count: {{ product.count }}</span> - <span>{{ getProductTypeName(product.type_count_id) }}</span>
+                  </div>
+                  <div class="prod_comment" v-if="product.comment">
+                    Comment: {{ product.comment }}
+                  </div>
+                </div>
+                <div class="prod_s prod_list_btn">
+                  <el-button type="danger" @click="removeInputProduct(indx, product.id, index)">X</el-button>
+                </div>
+              </div>
             </div>
+            <!--------------------------------------------------------------------------------------------------------------------->
           </div>
           <!--------------------------------------------------------------------------------------------------------------------->
           <el-form-item>
@@ -42,7 +44,9 @@
 </template>
 
 <script>
+import _id from "../../general-product/_id";
 export default {
+  components: {_id},
   middleware: 'auth',
 
   data() {
@@ -174,5 +178,99 @@ export default {
 </script>
 
 <style scoped>
+  .prod_list_container {
+    margin: 0 auto;
+    max-width: 840px;
+    width: 100%;
+    background-color: #fff;
+    padding: 24px;
+    border-radius: 5px;
+  }
 
+  .prod_list_container h1 {
+    text-align: center;
+    width: 100%;
+    font-size: 24px;
+    font-weight: 600;
+  }
+
+  .prod_list_form {
+    display: grid;
+    row-gap: 10px;
+  }
+
+  .general_type div {
+    width: 100%;
+  }
+
+  .type_prod_block {
+    display: flex;
+  }
+
+  .type_prod_block .el-button {
+    border-radius: 50%;
+    padding: 5px;
+    row-gap: 10px;
+  }
+
+  .general_type {
+    padding: 10px;
+    border-radius: 5px;
+  }
+
+  .general_type:nth-child(1n) {
+    background-color: #b2b2b2;
+  }
+
+  .general_type:nth-child(2n) {
+    background-color: #dcdcdc;
+  }
+
+  .all_prods {
+    display: flex;
+    flex-direction: column;
+    padding-left: 24px;
+    row-gap: 10px;
+    margin-top: 10px;
+  }
+
+  .prod {
+    display: flex;
+    padding: 10px;
+    border-radius: 5px;
+  }
+
+  .prod:nth-child(1n) {
+    background-color: #e5e7eb;
+  }
+
+  .prod:nth-child(2n) {
+    background-color: #d5d4d4;
+  }
+
+  .prod .el-button {
+    border-radius: 50%;
+    padding: 5px;
+  }
+
+  .prod .prod_s {
+    display: flex;
+    align-items: center;
+  }
+
+  .prod_list_container .prod_list_btn {
+    width: fit-content;
+  }
+
+  .prod_s.prod_list_btn {
+    align-items: flex-start;
+  }
+
+  .prod_comment {
+    padding: 10px;
+    background-color: #fff;
+    margin-top: 10px;
+    width: 90%;
+    border-radius: 5px;
+  }
 </style>
