@@ -2,9 +2,12 @@
   <div>
     <div class="all_prod_lists">
       <div v-for="prod_list in prod_lists">
-        <div>
-          <nuxt-link :to="'/product-list/' + prod_list.id">
+        <div class="all_prod_lists_shopping">
+          <nuxt-link :to="'/product-list/shopping/' + prod_list.id">
             <p>{{ prod_list.name }}</p>
+          </nuxt-link>
+          <nuxt-link :to="'/product-list/' + prod_list.id">
+            <p>Edit!</p>
           </nuxt-link>
         </div>
       </div>
@@ -38,5 +41,10 @@ export default {
 </script>
 
 <style scoped>
-
+  .all_prod_lists_shopping {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 24px 12px;
+  }
 </style>
