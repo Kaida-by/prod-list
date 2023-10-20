@@ -1,10 +1,10 @@
 <template>
   <div>
     <div class="all_prod_types">
-      <div v-for="type_product in type_products">
+      <div v-for="general_type_product in general_type_products">
         <div>
-          <nuxt-link :to="'/type-product/' + type_product.id">
-            <p>{{ type_product.name }}; id - {{ type_product.id }}; product list - {{ type_product.product_list_id }}</p>
+          <nuxt-link :to="'/general-type-product/' + general_type_product.id">
+            <p>{{ general_type_product.name }}</p>
           </nuxt-link>
         </div>
       </div>
@@ -14,20 +14,20 @@
 
 <script>
 export default {
-  name: "ProductType",
+  name: "GeneralProductType",
 
   data() {
     return {
       page: 1,
-      type_products: [],
+      general_type_products: [],
       links: {}
     }
   },
   methods: {
     async fetchData() {
-      await this.$axios.get('/type-products/get')
+      await this.$axios.get('/general-type-products/get')
           .then((res) => {
-            this.type_products = res.data.data.data
+            this.general_type_products = res.data.data.data
           })
           .catch(err => console.log(err))
     }

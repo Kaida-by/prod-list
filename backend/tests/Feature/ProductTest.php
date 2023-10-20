@@ -29,7 +29,7 @@ class ProductTest extends TestCase
             'type_count_id' => 1,
             'comment_id' => 1,
             'type_product_id' => 1,
-            'user_id' => 1,
+            'user_id' => auth()->id(),
             'created_at' => now(),
         ];
 

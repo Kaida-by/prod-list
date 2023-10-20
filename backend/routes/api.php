@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\GeneralProductController;
 use App\Http\Controllers\GeneralTypeProductController;
+use App\Http\Controllers\GenerateProductListController;
 use App\Http\Controllers\HelpController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductListController;
@@ -41,10 +42,10 @@ Route::group(['middleware' => 'jwt.auth'], static function () {
     Route::delete('/product/delete/{product}', [ProductController::class, 'delete']);
         //GeneralProducts
         Route::get('/general-products/get', [GeneralProductController::class, 'getAllProducts']);
-        Route::get('/general-products/{id}', [GeneralProductController::class, 'one']);
-        Route::post('/general-products/create', [GeneralProductController::class, 'create']);
-        Route::patch('/general-products/update/{product}', [GeneralProductController::class, 'update']);
-        Route::delete('/general-products/delete/{product}', [GeneralProductController::class, 'delete']);
+        Route::get('/general-product/{id}', [GeneralProductController::class, 'one']);
+        Route::post('/general-product/create', [GeneralProductController::class, 'create']);
+        Route::patch('/general-product/update/{generalProduct}', [GeneralProductController::class, 'update']);
+        Route::delete('/general-product/delete/{generalProduct}', [GeneralProductController::class, 'delete']);
 
     //ProductList
     Route::get('/product-lists/get', [ProductListController::class, 'index']);
@@ -52,6 +53,8 @@ Route::group(['middleware' => 'jwt.auth'], static function () {
     Route::post('/product-list/create', [ProductListController::class, 'create']);
     Route::patch('/product-list/update/{productList}', [ProductListController::class, 'update']);
     Route::delete('/product-list/delete/{productList}', [ProductListController::class, 'delete']);
+    Route::delete('/product-list/delete-type-product/{id}', [ProductListController::class, 'deleteTypeProductFromProductList']);
+    Route::delete('/product-list/delete-product/{id}', [ProductListController::class, 'deleteProductFromProductList']);
 
     //TypeProduct
     Route::get('/type-products/get', [TypeProductController::class, 'index']);
@@ -61,17 +64,13 @@ Route::group(['middleware' => 'jwt.auth'], static function () {
     Route::delete('/type-product/delete/{typeProduct}', [TypeProductController::class, 'delete']);
         //GeneralTypeProducts
         Route::get('/general-type-products/get', [GeneralTypeProductController::class, 'getAllTypeProducts']);
-        Route::get('/general-type-products/{id}', [GeneralTypeProductController::class, 'one']);
-        Route::post('/general-type-products/create', [GeneralTypeProductController::class, 'create']);
-        Route::patch('/general-type-products/update/{typeProduct}', [GeneralTypeProductController::class, 'update']);
-        Route::delete('/general-type-products/delete/{typeProduct}', [GeneralTypeProductController::class, 'delete']);
-
-    //Comment
-    Route::get('/comment/{id}', [CommentController::class, 'one']);
-    Route::post('/comment/create', [CommentController::class, 'create']);
-    Route::patch('/comment/update/{typeProduct}', [CommentController::class, 'update']);
-    Route::delete('/comment/delete/{typeProduct}', [CommentController::class, 'delete']);
+        Route::get('/general-type-product/{id}', [GeneralTypeProductController::class, 'one']);
+        Route::post('/general-type-product/create', [GeneralTypeProductController::class, 'create']);
+        Route::patch('/general-type-product/update/{generalTypeProduct}', [GeneralTypeProductController::class, 'update']);
+        Route::delete('/general-type-product/delete/{generalTypeProduct}', [GeneralTypeProductController::class, 'delete']);
 
     //GetSomeEntities
     Route::get('/type-counts/get', [HelpController::class, 'getTypeCounts']);
+    //Generate Product List
+    Route::post('/product-list/generate', [GenerateProductListController::class, 'generate']);
 });

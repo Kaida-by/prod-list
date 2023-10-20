@@ -74,7 +74,7 @@ class GeneralProductController extends Controller
 
             return response()->json([
                 'success' => true,
-                'data' => $this->generalProduct,
+                'data' => $generalProduct,
             ]);
         } catch (Exception $exception) {
             return response()->json([

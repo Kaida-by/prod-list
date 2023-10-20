@@ -1,9 +1,11 @@
 <template>
   <div class="container header-container mx-auto align-middle flex w-100 mb-6">
     <div class="header_flex">
-      <div class="logo">
-        Logo
-      </div>
+      <nuxt-link to="/home">
+        <div class="logo">
+          Logo
+        </div>
+      </nuxt-link>
       <div class="header-sdk" v-if="$auth.loggedIn">
         <div class="py-2">
           Hello, {{ $auth.user.name }}

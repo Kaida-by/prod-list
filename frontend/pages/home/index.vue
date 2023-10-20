@@ -8,15 +8,15 @@
     </div>
     <div class="prodType">
       <el-button type="success" class="px-6">
-        <nuxt-link :to="'/type-product/create'">Create new Type Product!</nuxt-link>
+        <nuxt-link :to="'/general-type-product/create'">Create new General Type Product!</nuxt-link>
       </el-button>
-      <product-type></product-type>
+      <general-product-type></general-product-type>
     </div>
     <div class="prod">
       <el-button type="success" class="px-6">
-        <nuxt-link :to="'/product/create'">Create new Product!</nuxt-link>
+        <nuxt-link :to="'/general-product/create'">Create new General Product!</nuxt-link>
       </el-button>
-      <product></product>
+      <general-product></general-product>
     </div>
   </div>
 </template>
@@ -24,8 +24,8 @@
 <script>
 
 import ProductList from "../../components/models/ProductList";
-import ProductType from "../../components/models/ProductType";
-import Product from "../../components/models/Product";
+import GeneralProductType from "../../components/models/GeneralProductType";
+import GeneralProduct from "../../components/models/GeneralProduct";
 
 export default {
   name: "home",
@@ -33,8 +33,8 @@ export default {
 
   components: {
     ProductList,
-    ProductType,
-    Product
+    GeneralProductType,
+    GeneralProduct
   },
 }
 </script>
