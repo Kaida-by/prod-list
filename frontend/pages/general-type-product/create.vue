@@ -7,6 +7,7 @@
           <el-form-item prop="name" class="w-3/5">
             <el-input placeholder="Name" type="name" v-model="form.name"></el-input>
             <span class="is_invalid" v-if="err.name"> {{ err.name[0] }}</span>
+            <color-picker start-color="#ffffff" :width="240" :height="240" v-model="form.color" :style="{background: form.color}"></color-picker>
           </el-form-item>
           <el-form-item class="mb-0 text-center w-3/5">
             <el-button type="primary" @click="create('form')" class="px-6 w-full">
@@ -28,6 +29,7 @@ export default {
     return {
       form: {
         name: '',
+        color: '',
         user_id: this.$auth.user.id,
       },
       err: {},

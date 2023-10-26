@@ -39,6 +39,7 @@ export default {
     './plugins/mixins/user',
     './plugins/axios',
     './plugins/element-ui.js',
+    './plugins/vue-color',
   ],
 
   env: {

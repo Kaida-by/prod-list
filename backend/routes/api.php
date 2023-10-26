@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
-use App\Http\Controllers\CommentController;
 use App\Http\Controllers\GeneralProductController;
 use App\Http\Controllers\GeneralTypeProductController;
 use App\Http\Controllers\GenerateProductListController;

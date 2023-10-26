@@ -1,11 +1,15 @@
 <template>
   <div class="container">
-    <div class="prod_list_container">
+    <div class="prod_list_container" :style="{background: form.color}">
       <div class="prod_list_general">
         <h1 class="">{{ form.name }}</h1>
         <el-form :model="form" status-icon ref="form" class="prod_list_form">
           <!--------------------------------------------------------------------------------------------------------------------->
-          <div v-for="(productType, indx) in form.typeProducts" :key="indx" class="general_type">
+          <div
+              v-for="(productType, indx) in form.typeProducts"
+              :key="indx"
+              class="general_type"
+              :style="{background: productType.color}">
             <div class="type_prod_block">
               <div class="prod_list_header">{{ productType.name }}</div>
               <div class="prod_list_btn gutter">
@@ -14,7 +18,11 @@
             </div>
             <!--------------------------------------------------------------------------------------------------------------------->
             <div class="all_prods">
-              <div v-for="(product, index) in productType.products" :key="index" class="prod">
+              <div
+                  v-for="(product, index) in productType.products"
+                  :key="index"
+                  class="prod"
+                  :style="{background: product.color}">
                 <div class="prod_f">
                   <div class="prod_name">Name: {{ product.name }}</div>
                   <div class="prod_count">
@@ -53,13 +61,16 @@ export default {
     return {
       form: {
         name: '',
+        color: '',
         user_id: this.$auth.user.id,
         typeProducts: [{
           name: '',
+          color: '',
           products: [
             {
               name: '',
               count: '',
+              color: '',
               type_count_id: '',
               comment: '',
             }
@@ -182,7 +193,6 @@ export default {
     margin: 0 auto;
     max-width: 840px;
     width: 100%;
-    background-color: #fff;
     padding: 24px;
     border-radius: 5px;
   }
@@ -218,14 +228,6 @@ export default {
     border-radius: 5px;
   }
 
-  .general_type:nth-child(1n) {
-    background-color: #b2b2b2;
-  }
-
-  .general_type:nth-child(2n) {
-    background-color: #dcdcdc;
-  }
-
   .all_prods {
     display: flex;
     flex-direction: column;
@@ -238,14 +240,6 @@ export default {
     display: flex;
     padding: 10px;
     border-radius: 5px;
-  }
-
-  .prod:nth-child(1n) {
-    background-color: #e5e7eb;
-  }
-
-  .prod:nth-child(2n) {
-    background-color: #d5d4d4;
   }
 
   .prod .el-button {

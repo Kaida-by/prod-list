@@ -80,6 +80,7 @@ class ProductListController extends Controller
         try {
             $productList->update([
                 'name' => $productListDataRequest->name,
+                'color' => $productListDataRequest->color,
                 'user_id' => $userId,
             ]);
 
@@ -88,12 +89,14 @@ class ProductListController extends Controller
                     if (array_key_exists($key, $productList->typeProducts->toArray())) {
                         $productList->typeProducts[$key]->update([
                             'name' => $typeProduct->name,
+                            'color' => $typeProduct->color,
                             'user_id' => $userId,
                             'product_list_id' => $productList->id,
                         ]);
                     } else {
                         $tp = TypeProduct::create([
                             'name' => $typeProduct->name,
+                            'color' => $typeProduct->color,
                             'user_id' => $userId,
                             'product_list_id' => $productList->id,
                         ]);
@@ -104,6 +107,7 @@ class ProductListController extends Controller
                         if (!$isGeneralTypeProduct) {
                             GeneralTypeProduct::create([
                                 'name' => $typeProduct->name,
+                                'color' => $typeProduct->color,
                                 'user_id' => $userId,
                             ]);
                         }
@@ -129,6 +133,7 @@ class ProductListController extends Controller
                             $productList->typeProducts[$key]->products[$keyPr]->update([
                                 'name' => $product->name,
                                 'count' => $product->count,
+                                'color' => $product->color,
                                 'type_count_id' => $product->type_count_id,
                                 'type_product_id' => $productList->typeProducts[$key]->id,
                                 'user_id' => $userId,
@@ -140,6 +145,7 @@ class ProductListController extends Controller
                             Product::create([
                                 'name' => $product->name,
                                 'count' => $product->count,
+                                'color' => $product->color,
                                 'type_count_id' => $product->type_count_id,
                                 'type_product_id' => $productList->typeProducts[$key]->id,
                                 'user_id' => $userId,
@@ -149,6 +155,7 @@ class ProductListController extends Controller
                             if (!$isGeneralProduct) {
                                 GeneralProduct::create([
                                     'name' => $product->name,
+                                    'color' => $product->color,
                                     'user_id' => $userId,
                                 ]);
                             }

@@ -10,6 +10,7 @@ use Illuminate\Support\Collection;
 /**
  * @property int $id
  * @property string $name
+ * @property string $color
  * @property int $user_id
  * @property string $created_at
  * @property string $updated_at
@@ -23,6 +24,7 @@ class ProductList extends Model
 
     protected $fillable = [
         'name',
+        'color',
         'user_id',
     ];
 

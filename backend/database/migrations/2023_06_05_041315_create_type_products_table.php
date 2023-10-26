@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('type_products', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('color');
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('product_list_id');
             $table->softDeletes();

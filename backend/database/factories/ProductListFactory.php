@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Http\Controllers\HelpController;
 use App\Models\ProductList;
 use Exception;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -21,6 +22,7 @@ class ProductListFactory extends Factory
     {
         return [
             'name' => fake()->colorName,
+            'color' => HelpController::generateRandomColor(),
             'user_id' => random_int(1, 3),
         ];
     }

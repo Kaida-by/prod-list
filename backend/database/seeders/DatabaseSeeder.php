@@ -23,8 +23,8 @@ class DatabaseSeeder extends Seeder
             ProductSeeder::class,
         ]);
 
-        $generalProducts = Product::all(['id', 'name', 'user_id'])->toArray();
-        $generalTypeProducts = TypeProduct::all(['id', 'name', 'user_id'])->toArray();
+        $generalProducts = Product::all(['id', 'name', 'color', 'user_id'])->toArray();
+        $generalTypeProducts = TypeProduct::all(['id', 'name', 'color', 'user_id'])->toArray();
 
         DB::table('general_products')->insert($generalProducts);
         DB::table('general_type_products')->insert($generalTypeProducts);

@@ -7,6 +7,8 @@
           <el-form-item prop="name" class="w-3/5">
             <el-input placeholder="Name" type="name" v-model="form.name"></el-input>
             <span class="is_invalid" v-if="err.name"> {{ err.name[0] }}</span>
+
+            <color-picker :width="240" :height="240" v-model="form.color" :style="{background: form.color}"></color-picker>
           </el-form-item>
           <!--------------------------------------------------------------------------------------------------------------------->
           <span>Update Your type products</span>
@@ -28,6 +30,8 @@
                   :value="general_type_product.name"
               />
             </el-select>
+
+            <color-picker :width="240" :height="240" v-model="productType.color" :style="{background: productType.color}"></color-picker>
 
             <span class="is_invalid" v-if="err.name"> {{ err.name[0] }}</span>
             <!--------------------------------------------------------------------------------------------------------------------->
@@ -55,6 +59,9 @@
                       />
                     </el-select>
                     <span class="is_invalid" v-if="err.name"> {{ err.name[0] }}</span>
+
+                    <color-picker :width="240" :height="240" v-model="product.color" :style="{background: product.color}"></color-picker>
+
                     <p>Count: </p>
                     <el-input-number v-model="product.count" :min="1" :max="999999999" />
                     <p>Your Type Counts:</p>
