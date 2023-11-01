@@ -11,6 +11,7 @@ class ProductListDataResource extends Data
     public function __construct(
         public int $id,
         public string $name,
+        public string $color,
         public Collection $typeProducts,
         public string $created_at,
         public string $updated_at,
@@ -21,6 +22,7 @@ class ProductListDataResource extends Data
         return new self(
             id: $productList->id,
             name: $productList->name,
+            color: $productList->color,
             typeProducts: $productList->typeProducts,
             created_at: $productList->created_at,
             updated_at: $productList->updated_at,

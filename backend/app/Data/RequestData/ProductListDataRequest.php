@@ -13,6 +13,8 @@ class ProductListDataRequest extends Data
 {
     #[Required, StringType, Max(255)]
     public string $name;
+    #[Required, StringType, Max(255)]
+    public string $color;
     #[DataCollectionOf(TypeProductDataRequest::class)]
     public DataCollection $typeProducts;
 }

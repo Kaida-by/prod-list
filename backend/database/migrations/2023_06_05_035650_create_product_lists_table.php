@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('product_lists', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('color');
             $table->unsignedBigInteger('user_id');
             $table->timestamps();
 

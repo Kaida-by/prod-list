@@ -15,6 +15,8 @@ class ProductDataRequest extends Data
     public string $name;
     #[Required, IntegerType, Max(999999999)]
     public int $count;
+    #[Required, StringType, Max(255)]
+    public string $color;
     #[Required, IntegerType, Max(999999999)]
     public int $type_count_id;
     #[Nullable, StringType]

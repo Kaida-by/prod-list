@@ -10,6 +10,7 @@ class TypeProductDataResource extends Data
     public function __construct(
         public int $id,
         public string $name,
+        public string $color,
         public int $user_id,
         public int $product_list_id,
         public string $created_at,
@@ -21,6 +22,7 @@ class TypeProductDataResource extends Data
         return new self(
             id: $typeProduct->id,
             name: $typeProduct->name,
+            color: $typeProduct->color,
             user_id: $typeProduct->user_id,
             product_list_id: $typeProduct->product_list_id,
             created_at: $typeProduct->created_at,

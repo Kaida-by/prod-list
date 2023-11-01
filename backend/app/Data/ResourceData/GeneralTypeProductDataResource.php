@@ -10,6 +10,7 @@ class GeneralTypeProductDataResource extends Data
     public function __construct(
         public int $id,
         public string $name,
+        public string $color,
         public int $user_id,
         public string $created_at,
         public string $updated_at,
@@ -20,6 +21,7 @@ class GeneralTypeProductDataResource extends Data
         return new self(
             id: $typeProduct->id,
             name: $typeProduct->name,
+            color: $typeProduct->color,
             user_id: $typeProduct->user_id,
             created_at: $typeProduct->created_at,
             updated_at: $typeProduct->updated_at,

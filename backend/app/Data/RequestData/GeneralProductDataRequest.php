@@ -11,4 +11,6 @@ class GeneralProductDataRequest extends Data
 {
     #[Required, StringType, Max(255)]
     public string $name;
+    #[Required, StringType, Max(255)]
+    public string $color;
 }

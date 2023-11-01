@@ -21,6 +21,7 @@ class GenerateProductListController extends Controller
     {
         $userId = auth()->id();
         $this->productList->name = $productListDataRequest->name;
+        $this->productList->color = $productListDataRequest->color;
         $this->productList->user_id = $userId;
 
         try {
@@ -39,6 +40,7 @@ class GenerateProductListController extends Controller
         foreach ($productListDataRequest->typeProducts as $typeProduct) {
             $newTypeProduct = new TypeProduct();
             $newTypeProduct->name = $typeProduct->name;
+            $newTypeProduct->color = $typeProduct->color;
             $newTypeProduct->user_id = $userId;
             $newTypeProduct->product_list_id = $this->productList->id;
 
@@ -48,6 +50,7 @@ class GenerateProductListController extends Controller
             if (!$isGeneralTypeProduct) {
                 $newGeneralTypeProduct = new GeneralTypeProduct();
                 $newGeneralTypeProduct->name = $typeProduct->name;
+                $newGeneralTypeProduct->color = $typeProduct->color;
                 $newGeneralTypeProduct->user_id = $userId;
             }
 
@@ -73,6 +76,7 @@ class GenerateProductListController extends Controller
                 $newProduct = new Product();
                 $newProduct->name = $product->name;
                 $newProduct->count = $product->count;
+                $newProduct->color = $product->color;
                 $newProduct->type_count_id = $product->type_count_id;
                 $newProduct->type_product_id = $newTypeProduct->id;
                 $newProduct->user_id = $userId;
@@ -84,6 +88,7 @@ class GenerateProductListController extends Controller
                 if (!$isGeneralProduct) {
                     $newGeneralProduct = new GeneralProduct();
                     $newGeneralProduct->name = $product->name;
+                    $newGeneralProduct->color = $product->color;
                     $newGeneralProduct->user_id = $userId;
                 }
 

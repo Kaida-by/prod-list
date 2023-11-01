@@ -17,7 +17,7 @@ class GeneralProductController extends Controller
     public function getAllProducts()
     {
         $generalProducts = GeneralProduct::where('user_id', auth()->id())
-            ->simplePaginate(10);
+            ->simplePaginate(240);
 
         return response()->json([
             'data' => GeneralProductDataResource::collection($generalProducts),
@@ -47,6 +47,7 @@ class GeneralProductController extends Controller
     public function create(GeneralProductDataRequest $generalProductDataRequest): ?JsonResponse
     {
         $this->generalProduct->name = $generalProductDataRequest->name;
+        $this->generalProduct->color = $generalProductDataRequest->color;
         $this->generalProduct->user_id = auth()->id();
 
         try {
@@ -69,6 +70,7 @@ class GeneralProductController extends Controller
         try {
             $generalProduct->update([
                 'name' => $generalProductDataRequest->name,
+                'color' => $generalProductDataRequest->color,
                 'user_id' => auth()->id(),
             ]);
 
