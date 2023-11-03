@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property string $name
  * @property string $color
+ * @property int|null $type_product_id
  * @property int $user_id
  * @property string $created_at
  * @property string $updated_at
@@ -21,6 +22,7 @@ class GeneralProduct extends Model
     protected $fillable = [
         'name',
         'color',
+        'type_product_id',
         'user_id',
     ];
 

@@ -48,6 +48,7 @@ class GeneralProductController extends Controller
     {
         $this->generalProduct->name = $generalProductDataRequest->name;
         $this->generalProduct->color = $generalProductDataRequest->color;
+        $this->generalProduct->type_product_id = $generalProductDataRequest->type_product_id;
         $this->generalProduct->user_id = auth()->id();
 
         try {
@@ -71,6 +72,7 @@ class GeneralProductController extends Controller
             $generalProduct->update([
                 'name' => $generalProductDataRequest->name,
                 'color' => $generalProductDataRequest->color,
+                'type_product_id' => $generalProductDataRequest->type_product_id,
                 'user_id' => auth()->id(),
             ]);
 
