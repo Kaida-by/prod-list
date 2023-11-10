@@ -145,7 +145,7 @@ export default {
         }
       }
     },
-    async deleteProdList() {
+    deleteProdList() {
       if (confirm("Do you really want to delete this Product List?")) {
         try {
           this.$axios.delete('/product-list/delete/' + this.$route.params.id).then(response => {
@@ -156,12 +156,14 @@ export default {
         }
       }
     },
-    async deleteTypeProductFromProdList(index) {
-      try {
-        this.$axios.delete('/product-list/delete-type-product/' + index).then(response => {
-        });
-      } catch(e) {
-        return;
+    deleteTypeProductFromProdList(index) {
+      if (confirm("Do you really want to delete this Product Type?")) {
+        try {
+          this.$axios.delete('/product-list/delete-type-product/' + index).then(response => {
+          });
+        } catch (e) {
+          return;
+        }
       }
     },
     async deleteProductFromProdList(index) {
