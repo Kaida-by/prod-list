@@ -26,10 +26,7 @@
                   class="prod"
                   :style="{background: product.color}">
                 <div class="prod_f">
-                  <div class="prod_name">Name: {{ product.name }}</div>
-                  <div class="prod_count">
-                    <span>Count: {{ product.count }}</span> - <span>{{ getProductTypeName(product.type_count_id) }}</span>
-                  </div>
+                  <div class="prod_name">{{ product.name }}: <span>{{ product.count }}</span> <span>{{ getProductTypeName(product.type_count_id) }}</span></div>
                   <div class="prod_comment" v-if="product.comment">
                     Comment: {{ product.comment }}
                   </div>
