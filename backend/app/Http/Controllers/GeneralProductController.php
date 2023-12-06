@@ -7,6 +7,7 @@ use App\Data\ResourceData\GeneralProductDataResource;
 use App\Models\GeneralProduct;
 use Exception;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 
 class GeneralProductController extends Controller
 {
@@ -18,6 +19,37 @@ class GeneralProductController extends Controller
     {
         $generalProducts = GeneralProduct::where('user_id', auth()->id())
             ->simplePaginate(240);
+
+        return response()->json([
+            'data' => GeneralProductDataResource::collection($generalProducts),
+        ]);
+    }
+
+    public function getAllProductsByName(?string $name)
+    {
+        $query = DB::table('general_products')->select(
+            'general_products.id',
+            'general_products.name',
+            'general_products.color',
+            'general_products.type_product_id',
+            'general_products.user_id',
+            'general_products.created_at',
+            'general_products.updated_at'
+        );
+        $query = $query->where('general_products.user_id', auth()->id());
+
+        if ($name) {
+            $query = $query->leftJoin
+            (
+                'general_type_products',
+                'general_products.type_product_id',
+                '=',
+                'general_type_products.id'
+            )
+                ->where('general_type_products.name', $name);
+        }
+
+        $generalProducts = $query->simplePaginate(240);
 
         return response()->json([
             'data' => GeneralProductDataResource::collection($generalProducts),
@@ -48,6 +80,7 @@ class GeneralProductController extends Controller
     {
         $this->generalProduct->name = $generalProductDataRequest->name;
         $this->generalProduct->color = $generalProductDataRequest->color;
+        $this->generalProduct->type_product_id = $generalProductDataRequest->type_product_id;
         $this->generalProduct->user_id = auth()->id();
 
         try {
@@ -71,6 +104,7 @@ class GeneralProductController extends Controller
             $generalProduct->update([
                 'name' => $generalProductDataRequest->name,
                 'color' => $generalProductDataRequest->color,
+                'type_product_id' => $generalProductDataRequest->type_product_id,
                 'user_id' => auth()->id(),
             ]);
 

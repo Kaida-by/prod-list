@@ -9,6 +9,25 @@
             <span class="is_invalid" v-if="err.name"> {{ err.name[0] }}</span>
             <color-picker start-color="#ffffff" :width="240" :height="240" v-model="form.color" :style="{background: form.color}"></color-picker>
           </el-form-item>
+
+          <el-select
+              v-model="form.type_product_id"
+              filterable
+              allow-create
+              default-first-option
+              :reserve-keyword="false"
+              placeholder="Name Your type products"
+              no-data-text="No data"
+              class="w-3/5"
+          >
+            <el-option
+                v-for="general_type_product in general_type_products"
+                :key="general_type_product.name"
+                :label="general_type_product.name"
+                :value="general_type_product.id"
+            />
+          </el-select>
+
           <el-form-item class="mb-0 text-center w-3/5">
             <el-button type="primary" @click="create('form')" class="px-6 w-full">
               Create!
@@ -30,9 +49,11 @@ export default {
       form: {
         name: '',
         color: '',
+        type_product_id: '',
         user_id: this.$auth.user.id,
       },
       err: {},
+      general_type_products: [],
     }
   },
   methods: {
@@ -45,7 +66,17 @@ export default {
         this.err = err.response.data.errors
         return;
       }
-    }
+    },
+    async fetchGeneralTypeProducts() {
+      await this.$axios.get('/general-type-products/get')
+          .then((res) => {
+            this.general_type_products = res.data.data.data
+          })
+          .catch(err => console.log(err))
+    },
+  },
+  mounted() {
+    this.fetchGeneralTypeProducts()
   }
 }
 </script>

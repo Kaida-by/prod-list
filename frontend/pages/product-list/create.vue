@@ -40,7 +40,7 @@
                       placeholder="Name Your type products"
                       no-data-text="No data"
                       class="w-full"
-                      @change="changeDefaultProductTypeColor(productType)"
+                      @change="changeProductType(productType)"
                   >
                     <el-option
                         v-for="general_type_product in general_type_products"
@@ -301,12 +301,36 @@ export default {
     async removeInputTypeProduct(index, indexTypeProduct) {
       this.form.typeProducts.splice(index, 1);
     },
-    async changeDefaultProductTypeColor(productType) {
+    async changeProductType(productType) {
       const generalTypeProduct = this.general_type_products.find(
           (product) => product.name === productType.name
       );
       if (generalTypeProduct) {
         productType.color = await generalTypeProduct.color;
+      }
+
+      if (productType.name) {
+        await this.$axios.get('/general-products-by-name/get/' + productType.name)
+            .then((res) => {
+              this.general_products = res.data.data.data
+            })
+            .catch(err => console.log(err))
+        await this.$axios.get('/general-products/get/')
+            .then((res) => {
+              res.data.data.data.forEach((data) => {
+                let index = this.general_products.findIndex((item) => item.name === data.name);
+                if (index === -1) {
+                  this.general_products.push(data)
+                }
+              })
+            })
+            .catch(err => console.log(err))
+      } else {
+        await this.$axios.get('/general-products/get/')
+            .then((res) => {
+              this.general_products = res.data.data.data
+            })
+            .catch(err => console.log(err))
       }
     },
     async changeDefaultProductColor(product) {
@@ -363,7 +387,7 @@ export default {
   },
   mounted() {
     this.fetchGeneralTypeProducts()
-    this.fetchGeneralProduct()
+    // this.fetchGeneralProduct()
     this.fetchTypeCounts()
     // window.addEventListener('click', this.handleClickOutside);
     // window.addEventListener('click', this.handleClickTPOutside);

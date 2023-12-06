@@ -40,7 +40,8 @@ Route::group(['middleware' => 'jwt.auth'], static function () {
     Route::patch('/product/update/{product}', [ProductController::class, 'update']);
     Route::delete('/product/delete/{product}', [ProductController::class, 'delete']);
         //GeneralProducts
-        Route::get('/general-products/get', [GeneralProductController::class, 'getAllProducts']);
+        Route::get('/general-products/get/', [GeneralProductController::class, 'getAllProducts']);
+        Route::get('/general-products-by-name/get/{name}', [GeneralProductController::class, 'getAllProductsByName']);
         Route::get('/general-product/{id}', [GeneralProductController::class, 'one']);
         Route::post('/general-product/create', [GeneralProductController::class, 'create']);
         Route::patch('/general-product/update/{generalProduct}', [GeneralProductController::class, 'update']);
