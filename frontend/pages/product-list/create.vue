@@ -1,195 +1,180 @@
 <template>
-  <div class="container mx-auto align-middle flex w-100">
-    <div class="sm:mx-auto w-2/5 h-full flex flex-col items-center justify-center">
-      <div class="bg-white w-full rounded-lg pt-12 pb-7">
-        <h1 class="text-center w-full pb-5 text-2xl">Create Product List</h1>
+  <div class="container mx-auto align-middle flex w-100 pl-create">
+    <div class="h-full flex flex-col items-center justify-center w-full">
+      <div class="w-full rounded-lg prod-list-form">
+        <h1 class="text-center w-full pb-5 text-2xl">Создать список</h1>
         <el-form :model="form" status-icon ref="form" class="flex flex-col justify-center items-center">
           <div class="form_pl">
-            <el-form-item prop="name" class="w-10/12">
+            <el-form-item prop="name" class="w-full">
               <div class="form_pl_inp">
-                <el-input placeholder="Name Product List" type="name" v-model="form.name"></el-input>
+                <span>Имя списка</span>
+                <el-input placeholder="Введите имя " type="name" v-model="form.name"></el-input>
                 <span class="is_invalid" v-if="err.name"> {{ err.name[0] }}</span>
               </div>
             </el-form-item>
-            <div class="form_pl_clr">
-              <div class="clr_btn" @click="toggleDropdownPL" :style="{background: form.color}" ref="dropdown"></div>
-              <div class="plt_clr" v-if="showDropdownPL">
-                <color-picker
-                    :width="240"
-                    :height="240"
-                    start-color="#ffffff"
-                    v-model="form.color"
-                    :style="{background: form.color, borderRadius: '50%'}"
-                >
-                </color-picker>
-              </div>
+            <div class="custom_colors">
+              <el-radio-group
+                class="label_custom_group"
+                v-model="form.color"
+                size="large"
+              >
+                <carousel :per-page="7" :navigationEnabled="true">
+                  <slide v-for="(color, index) in colors">
+                    <span
+                      class="custom_colors_span"
+                      :style="{color: color.color, borderColor: color.color}"
+                      :class="{ 'is-checked': isCheckedIndex === index }"
+                      @click="handleColorClick(index)"
+                    >
+                      <el-radio
+                        class="label_custom swiper-slide"
+                        :label="color.color"
+                      />
+                    </span>
+                  </slide>
+                </carousel>
+              </el-radio-group>
             </div>
           </div>
 <!--------------------------------------------------------------------------------------------------------------------->
-          <div class="all_types">
-            <span>Select Your type products</span>
-            <div v-for="(productType, indx) in form.typeProducts" :key="indx" class="all_prod_types w-100 pt-1 pb-1">
-              <div class="form_tp">
-                <div class="from_tp_in w-10/12">
-                  <el-select
-                      v-model="productType.name"
-                      filterable
-                      allow-create
-                      default-first-option
-                      :reserve-keyword="false"
-                      placeholder="Name Your type products"
-                      no-data-text="No data"
-                      class="w-full"
-                      @change="changeProductType(productType)"
-                  >
-                    <el-option
-                        v-for="general_type_product in general_type_products"
-                        :key="general_type_product.name"
-                        :label="general_type_product.name"
-                        :value="general_type_product.name"
-                    />
-                  </el-select>
-                </div>
-                <div class="form_tp_clr">
-                  <div class="clr_btn" @click="toggleDropdownTP(indx)" :style="{background: productType.color}" ref="dropdownTP"></div>
-                  <div class="plt_clr" v-if="productType.showDropdown">
-                    <div v-if="productType.color">
-                      <color-picker
-                          :width="240"
-                          :height="240"
-                          :start-color="productType.color"
-                          v-model="productType.color"
-                          :style="{background: productType.color, borderRadius: '50%'}"
-                      >
-                      </color-picker>
-                    </div>
-                    <div v-else>
-                      <color-picker
-                          :width="240"
-                          :height="240"
-                          start-color="#ffffff"
-                          v-model="productType.color"
-                          :style="{background: productType.color, borderRadius: '50%'}"
-                      >
-                      </color-picker>
-                    </div>
-                  </div>
-                </div>
-              </div>
+<!--          <div class="all_types">-->
+<!--            <span>Select Your type products</span>-->
+<!--            <div v-for="(productType, indx) in form.typeProducts" :key="indx" class="all_prod_types w-100 pt-1 pb-1">-->
+<!--              <div class="form_tp">-->
+<!--                <div class="from_tp_in w-10/12">-->
+<!--                  <el-select-->
+<!--                      v-model="productType.name"-->
+<!--                      filterable-->
+<!--                      allow-create-->
+<!--                      default-first-option-->
+<!--                      :reserve-keyword="false"-->
+<!--                      placeholder="Name Your type products"-->
+<!--                      no-data-text="No data"-->
+<!--                      class="w-full"-->
+<!--                      @change="changeProductType(productType)"-->
+<!--                  >-->
+<!--                    <el-option-->
+<!--                        v-for="general_type_product in general_type_products"-->
+<!--                        :key="general_type_product.name"-->
+<!--                        :label="general_type_product.name"-->
+<!--                        :value="general_type_product.name"-->
+<!--                    />-->
+<!--                  </el-select>-->
+<!--                </div>-->
+<!--                <div class="form_tp_clr">-->
+<!--                  <div class="clr_btn" @click="toggleDropdownTP(indx)" :style="{background: productType.color}" ref="dropdownTP"></div>-->
+<!--                  <div class="plt_clr" v-if="productType.showDropdown">-->
+<!--                    <div v-if="productType.color">-->
+<!--                      <color-picker-->
+<!--                          :width="240"-->
+<!--                          :height="240"-->
+<!--                          :start-color="productType.color"-->
+<!--                          v-model="productType.color"-->
+<!--                          :style="{background: productType.color, borderRadius: '50%'}"-->
+<!--                      >-->
+<!--                      </color-picker>-->
+<!--                    </div>-->
+<!--                    <div v-else>-->
+<!--                      <color-picker-->
+<!--                          :width="240"-->
+<!--                          :height="240"-->
+<!--                          start-color="#ffffff"-->
+<!--                          v-model="productType.color"-->
+<!--                          :style="{background: productType.color, borderRadius: '50%'}"-->
+<!--                      >-->
+<!--                      </color-picker>-->
+<!--                    </div>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--              </div>-->
 
-              <!--------------------------------------------------------------------------------------------------------------------->
-              <div class="all_prods">
-                <span>Select Your Products: </span>
-                <div class="container mx-auto align-middle flex w-full">
-                  <div class="sm:mx-auto h-full flex flex-col items-center justify-center w-full">
-                    <div v-for="(product, index) in productType.products" :key="index"
-                         class="bg-white w-full rounded-lg pt-1 pb-1">
-                      <div class="form_tp">
-                        <div class="from_tp_in w-10/12">
-                          <el-select
-                              v-model="product.name"
-                              filterable
-                              allow-create
-                              default-first-option
-                              :reserve-keyword="false"
-                              placeholder="Name Your Products"
-                              no-data-text="No data"
-                              class="w-full"
-                              @change="changeDefaultProductColor(product)"
-                          >
-                            <el-option
-                                v-for="general_product in general_products"
-                                :key="general_product.name"
-                                :label="general_product.name"
-                                :value="general_product.name"
-                            />
-                          </el-select>
-                        </div>
-                        <div class="form_tp_clr">
-                          <div class="clr_btn" @click="toggleDropdownP(indx, index)" :style="{background: product.color}" ref="dropdownP"></div>
-                          <div class="plt_clr" v-if="product.showDropdown">
-                            <div v-if="product.color">
-                              <color-picker
-                                  :width="240"
-                                  :height="240"
-                                  :start-color="product.color"
-                                  v-model="product.color"
-                                  :style="{background: product.color, borderRadius: '50%'}"
-                              >
-                              </color-picker>
-                            </div>
-                            <div v-else>
-                              <color-picker
-                                  :width="240"
-                                  :height="240"
-                                  start-color="#ffffff"
-                                  v-model="product.color"
-                                  :style="{background: product.color, borderRadius: '50%'}"
-                              >
-                              </color-picker>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
+<!--              &lt;!&ndash;-&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&ndash;&gt;-->
+<!--              <div class="all_prods">-->
+<!--                <span>Select Your Products: </span>-->
+<!--                <div class="container mx-auto align-middle flex w-full">-->
+<!--                  <div class="sm:mx-auto h-full flex flex-col items-center justify-center w-full">-->
+<!--                    <div v-for="(product, index) in productType.products" :key="index"-->
+<!--                         class="bg-white w-full rounded-lg pt-1 pb-1">-->
+<!--                      <div class="form_tp">-->
+<!--                        <div class="from_tp_in w-10/12">-->
+<!--                          <el-select-->
+<!--                              v-model="product.name"-->
+<!--                              filterable-->
+<!--                              allow-create-->
+<!--                              default-first-option-->
+<!--                              :reserve-keyword="false"-->
+<!--                              placeholder="Name Your Products"-->
+<!--                              no-data-text="No data"-->
+<!--                              class="w-full"-->
+<!--                          >-->
+<!--                            <el-option-->
+<!--                                v-for="general_product in general_products"-->
+<!--                                :key="general_product.name"-->
+<!--                                :label="general_product.name"-->
+<!--                                :value="general_product.name"-->
+<!--                            />-->
+<!--                          </el-select>-->
+<!--                        </div>-->
+<!--                      </div>-->
 
-                      <p>Count: </p>
-                      <div class="count_gen">
-                        <div class="count_c">
-                          <el-input-number v-model="product.count" :min="1" :max="999999999" />
-                        </div>
-                        <div class="type_count">
-                          <el-select
-                              v-model="product.type_count_id"
-                              placeholder="Select"
-                              class="w-full"
-                          >
-                            <el-option
-                                v-for="type_count in type_counts"
-                                :key="type_count.name"
-                                :label="type_count.name"
-                                :value="type_count.id"
-                            />
-                          </el-select>
-                        </div>
-                      </div>
-                      <div class="comm">
-                        <template>
-                          <el-input
-                              v-model="product.comment"
-                              :rows="2"
-                              type="textarea"
-                              placeholder="Comment"
-                          />
-                        </template>
-                      </div>
+<!--                      <p>Count: </p>-->
+<!--                      <div class="count_gen">-->
+<!--                        <div class="count_c">-->
+<!--                          <el-input-number v-model="product.count" :min="1" :max="999999999" />-->
+<!--                        </div>-->
+<!--                        <div class="type_count">-->
+<!--                          <el-select-->
+<!--                              v-model="product.type_count_id"-->
+<!--                              placeholder="Select"-->
+<!--                              class="w-full"-->
+<!--                          >-->
+<!--                            <el-option-->
+<!--                                v-for="type_count in type_counts"-->
+<!--                                :key="type_count.name"-->
+<!--                                :label="type_count.name"-->
+<!--                                :value="type_count.id"-->
+<!--                            />-->
+<!--                          </el-select>-->
+<!--                        </div>-->
+<!--                      </div>-->
+<!--                      <div class="comm">-->
+<!--                        <template>-->
+<!--                          <el-input-->
+<!--                              v-model="product.comment"-->
+<!--                              :rows="2"-->
+<!--                              type="textarea"-->
+<!--                              placeholder="Comment"-->
+<!--                          />-->
+<!--                        </template>-->
+<!--                      </div>-->
 
-                      <div class="pl_btn_bl gutter">
-                        <el-button type="primary" @click="addInputProduct(indx)" class="px-6">
-                          + p
-                        </el-button>
-                        <el-button type="danger" @click="removeInputProduct(indx, product.id, index)" class="px-6">
-                          - p
-                        </el-button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!--------------------------------------------------------------------------------------------------------------------->
-              <div class="pl_btn_bl gutter">
-                <el-button type="primary" @click="addInputTypeProduct" class="px-6">
-                  + tp
-                </el-button>
-                <el-button type="danger" @click="removeInputTypeProduct(indx, productType.id)" class="px-6">
-                  - tp
-                </el-button>
-              </div>
-            </div>
-          </div>
+<!--                      <div class="pl_btn_bl gutter">-->
+<!--                        <el-button type="primary" @click="addInputProduct(indx)" class="px-6">-->
+<!--                          + p-->
+<!--                        </el-button>-->
+<!--                        <el-button type="danger" @click="removeInputProduct(indx, product.id, index)" class="px-6">-->
+<!--                          - p-->
+<!--                        </el-button>-->
+<!--                      </div>-->
+<!--                    </div>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--              &lt;!&ndash;-&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&ndash;&gt;-->
+<!--              <div class="pl_btn_bl gutter">-->
+<!--                <el-button type="primary" @click="addInputTypeProduct" class="px-6">-->
+<!--                  + tp-->
+<!--                </el-button>-->
+<!--                <el-button type="danger" @click="removeInputTypeProduct(indx, productType.id)" class="px-6">-->
+<!--                  - tp-->
+<!--                </el-button>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
 <!--------------------------------------------------------------------------------------------------------------------->
           <el-form-item class="mb-0 text-center w-3/5">
             <el-button type="success" @click="create('form')" class="px-6 w-full">
-              Generate!
+              Сохранить
             </el-button>
           </el-form-item>
         </el-form>
@@ -229,9 +214,22 @@ export default {
       },
       err: {},
       general_type_products: [],
+      basic_type_products: [],
       general_products: [],
+      basic_products: [],
       type_counts: [],
       showDropdownPL: false,
+      isCheckedIndex: null,
+      colors: [
+        { id: 1, color: '#006eff' },
+        { id: 2, color: '#ff5858' },
+        { id: 3, color: '#fff46e' },
+        { id: 4, color: '#6eff94' },
+        { id: 5, color: '#ff99e9' },
+        { id: 6, color: '#d899ff' },
+        { id: 7, color: '#9f99ff' },
+        { id: 8, color: '#99fffa' },
+      ],
     }
   },
   methods: {
@@ -312,17 +310,7 @@ export default {
       if (productType.name) {
         await this.$axios.get('/general-products-by-name/get/' + productType.name)
             .then((res) => {
-              this.general_products = res.data.data.data
-            })
-            .catch(err => console.log(err))
-        await this.$axios.get('/general-products/get/')
-            .then((res) => {
-              res.data.data.data.forEach((data) => {
-                let index = this.general_products.findIndex((item) => item.name === data.name);
-                if (index === -1) {
-                  this.general_products.push(data)
-                }
-              })
+              this.general_products = res.data.data
             })
             .catch(err => console.log(err))
       } else {
@@ -349,6 +337,22 @@ export default {
     },
     toggleDropdownP(indexTP, index) {
       this.form.typeProducts[indexTP].products[index].showDropdown = !this.form.typeProducts[indexTP].products[index].showDropdown;
+    },
+    async fetchBasicTypeProducts() {
+      await this.$axios.get('/basic-type-products/get')
+        .then((res) => {
+          this.basic_type_products = res.data.data
+          this.general_type_products = this.general_type_products.concat(this.basic_type_products)
+        })
+        .catch(err => console.log(err))
+    },
+    async fetchBasicProducts() {
+      await this.$axios.get('/basic-products/get')
+        .then((res) => {
+          this.basic_products = res.data.data
+          this.general_products = this.general_products.concat(this.basic_products)
+        })
+        .catch(err => console.log(err))
     },
     handleClickOutside(event) {
       const target = event.target;
@@ -384,11 +388,27 @@ export default {
         }
       }
     },
+    handleColorClick(index) {
+      if (this.isCheckedIndex !== null) {
+        // Убираем класс у предыдущего выбранного элемента
+        this.$set(
+          this.colors[this.isCheckedIndex],
+          'isChecked',
+          false
+        );
+      }
+
+      // Добавляем класс текущему выбранному элементу
+      this.$set(this.colors[index], 'isChecked', true);
+      this.isCheckedIndex = index;
+    },
   },
   mounted() {
     this.fetchGeneralTypeProducts()
     // this.fetchGeneralProduct()
     this.fetchTypeCounts()
+    this.fetchBasicTypeProducts()
+    this.fetchBasicProducts()
     // window.addEventListener('click', this.handleClickOutside);
     // window.addEventListener('click', this.handleClickTPOutside);
     // window.addEventListener('click', this.handleClickPOutside);
@@ -401,10 +421,105 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
+  .pl-create {
+    margin-top: 35px;
+  }
+  .prod-list-form {
+    background-color: #303030;
+  }
+  h1.text-center {
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    padding: 30px 0 35px 0;
+    text-align: center;
+  }
+  .form_pl_inp {
+    padding: 17px 17px 0 17px;
+  }
+  .form_pl_inp span {
+    color: #A5A5A5;
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    padding-bottom: 7px;
+  }
+  .form_pl_inp .el-input input {
+    background-color: #303030;
+    border: 1px solid #555;
+    color: #A5A5A5;
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    position: relative;
+  }
+  .custom_colors {
+    padding: 15px 40px;
+  }
+  .label_custom_group {
+    display: flex;
+    width: 100%;
+  }
+  .label_custom {
+    position: relative;
+  }
+  .custom_colors .custom_colors_span {
+    display: flex;
+    border: 1px solid;
+    border-radius: 50%;
+    width: 21px;
+    height: 21px;
+    margin: 0 auto;
+  }
+  .custom_colors .custom_colors_span.is-checked {
+    border: 2px solid;
+  }
+  .VueCarousel, .VueCarousel-wrapper {
+    width: 100%;
+  }
+  .el-radio-button__inner {
+    display: none;
+  }
+  .label_custom.is-active {
+    border: 2px solid #000;
+  }
+  .VueCarousel-inner {
+    margin-top: 10px;
+    justify-content: space-between;
+  }
+  .VueCarousel-slide {
+    position: relative;
+  }
+  .carousel {
+    width: 200px;
+  }
   .el-form-item {
     margin-bottom: 0;
   }
+  .el-radio__input {
+    display: none;
+  }
+  .el-radio__label {
+    font-size: 0;
+    width: 21px;
+    height: 21px;
+    display: flex;
+    margin: 0 auto;
+  }
+
+
+
+
+
+
+
+
+
+
 
   .all_prods, .all_types {
     padding: 10px;
@@ -428,8 +543,8 @@ export default {
 
   .form_pl {
     display: flex;
-    justify-content: space-between;
-    width: 60%;
+    flex-direction: column;
+    width: 100%;
     position: relative;
   }
 

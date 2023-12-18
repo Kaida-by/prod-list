@@ -101,17 +101,6 @@ class ProductListController extends Controller
                             'product_list_id' => $productList->id,
                         ]);
 
-                        $isGeneralTypeProduct = GeneralTypeProduct::where(['name' => $typeProduct->name, 'user_id' => $userId])
-                            ->first();
-
-                        if (!$isGeneralTypeProduct) {
-                            GeneralTypeProduct::create([
-                                'name' => $typeProduct->name,
-                                'color' => $typeProduct->color,
-                                'user_id' => $userId,
-                            ]);
-                        }
-
                         $productList->typeProducts->add($tp);
                     }
                 } catch (Exception $exception) {
@@ -140,8 +129,6 @@ class ProductListController extends Controller
                                 'comment' => $product->comment,
                             ]);
                         } else {
-                            $isGeneralProduct = GeneralProduct::where(['name' => $product->name, 'user_id' => $userId])
-                                ->first();
                             Product::create([
                                 'name' => $product->name,
                                 'count' => $product->count,
@@ -151,15 +138,6 @@ class ProductListController extends Controller
                                 'user_id' => $userId,
                                 'comment' => $product->comment,
                             ]);
-
-                            if (!$isGeneralProduct) {
-                                GeneralProduct::create([
-                                    'name' => $product->name,
-                                    'color' => $product->color,
-                                    'user_id' => $userId,
-                                ]);
-                            }
-
                         }
                     } catch (Exception $exception) {
                         return response()->json([

@@ -1,24 +1,17 @@
 <template>
-  <div class="container mx-auto grid-cols-3 grid">
-    <div class="prodList">
-      <el-button type="success" class="px-6">
-        <nuxt-link :to="'/product-list/create'">Create new Product List!</nuxt-link>
-      </el-button>
-      <product-list></product-list>
-    </div>
-    <div class="prodType">
-      <el-button type="success" class="px-6">
-        <nuxt-link :to="'/general-type-product/create'">Create new General Type Product!</nuxt-link>
-      </el-button>
-      <general-product-type></general-product-type>
-    </div>
-    <div class="prod">
-      <el-button type="success" class="px-6">
-        <nuxt-link :to="'/general-product/create'">Create new General Product!</nuxt-link>
-      </el-button>
-      <general-product></general-product>
-    </div>
+  <div class="first_page">
+    <product-list></product-list>
   </div>
+<!--    <el-button type="success" class="px-6">-->
+<!--      <nuxt-link :to="'/product-list/create'">Create new Product List!</nuxt-link>-->
+<!--    </el-button>-->
+
+<!--    <div class="prodType">-->
+<!--      <general-product-type></general-product-type>-->
+<!--    </div>-->
+<!--    <div class="prod">-->
+<!--      <general-product></general-product>-->
+<!--    </div>-->
 </template>
 
 <script>
@@ -48,5 +41,10 @@ export default {
   }
   .prod {
     background-color: burlywood;
+  }
+  .first_page {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
   }
 </style>
