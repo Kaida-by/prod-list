@@ -44,151 +44,119 @@
 <!--------------------------------------------------------------------------------------------------------------------->
           <div class="categories">
             <div class="categories_in">
+              <div v-for="(productType, indx) in form.typeProducts" :key="indx" class="all_prod_types w-100 pt-1 pb-1">
+                <div class="form_tp">
+                  <div class="from_tp_in w-full">
+                    <el-select
+                        v-model="productType.name"
+                        filterable
+                        allow-create
+                        default-first-option
+                        :reserve-keyword="false"
+                        placeholder="Выберите категорию"
+                        no-data-text="No data"
+                        class="w-full"
+                        @change="changeProductType(productType)"
+                    >
+                      <el-option
+                          v-for="general_type_product in general_type_products"
+                          :key="general_type_product.name"
+                          :label="general_type_product.name"
+                          :value="general_type_product.name"
+                      />
+                    </el-select>
+                  </div>
+                </div>
 
+                <!--------------------------------------------------------------------------------------------------------------------->
+<!--                <div class="all_prods">-->
+<!--                  <span>Select Your Products: </span>-->
+<!--                  <div class="container mx-auto align-middle flex w-full">-->
+<!--                    <div class="sm:mx-auto h-full flex flex-col items-center justify-center w-full">-->
+<!--                      <div v-for="(product, index) in productType.products" :key="index"-->
+<!--                           class="bg-white w-full rounded-lg pt-1 pb-1">-->
+<!--                        <div class="form_tp">-->
+<!--                          <div class="from_tp_in w-10/12">-->
+<!--                            <el-select-->
+<!--                                v-model="product.name"-->
+<!--                                filterable-->
+<!--                                allow-create-->
+<!--                                default-first-option-->
+<!--                                :reserve-keyword="false"-->
+<!--                                placeholder="Name Your Products"-->
+<!--                                no-data-text="No data"-->
+<!--                                class="w-full"-->
+<!--                            >-->
+<!--                              <el-option-->
+<!--                                  v-for="general_product in general_products"-->
+<!--                                  :key="general_product.name"-->
+<!--                                  :label="general_product.name"-->
+<!--                                  :value="general_product.name"-->
+<!--                              />-->
+<!--                            </el-select>-->
+<!--                          </div>-->
+<!--                        </div>-->
+
+<!--                        <p>Count: </p>-->
+<!--                        <div class="count_gen">-->
+<!--                          <div class="count_c">-->
+<!--                            <el-input-number v-model="product.count" :min="1" :max="999999999" />-->
+<!--                          </div>-->
+<!--                          <div class="type_count">-->
+<!--                            <el-select-->
+<!--                                v-model="product.type_count_id"-->
+<!--                                placeholder="Select"-->
+<!--                                class="w-full"-->
+<!--                            >-->
+<!--                              <el-option-->
+<!--                                  v-for="type_count in type_counts"-->
+<!--                                  :key="type_count.name"-->
+<!--                                  :label="type_count.name"-->
+<!--                                  :value="type_count.id"-->
+<!--                              />-->
+<!--                            </el-select>-->
+<!--                          </div>-->
+<!--                        </div>-->
+<!--                        <div class="comm">-->
+<!--                          <template>-->
+<!--                            <el-input-->
+<!--                                v-model="product.comment"-->
+<!--                                :rows="2"-->
+<!--                                type="textarea"-->
+<!--                                placeholder="Comment"-->
+<!--                            />-->
+<!--                          </template>-->
+<!--                        </div>-->
+
+<!--                        <div class="pl_btn_bl gutter">-->
+<!--                          <el-button type="primary" @click="addInputProduct(indx)" class="px-6">-->
+<!--                            + p-->
+<!--                          </el-button>-->
+<!--                          <el-button type="danger" @click="removeInputProduct(indx, product.id, index)" class="px-6">-->
+<!--                            - p-->
+<!--                          </el-button>-->
+<!--                        </div>-->
+<!--                      </div>-->
+<!--                    </div>-->
+<!--                  </div>-->
+<!--                </div>-->
+                <!--------------------------------------------------------------------------------------------------------------------->
+                <div class="pl_btn_bl gutter">
+<!--                  <el-button type="danger" @click="removeInputTypeProduct(indx, productType.id)" class="px-6">-->
+<!--                    - tp-->
+<!--                  </el-button>-->
+                </div>
+              </div>
             </div>
-            <div class="addMoreCategory addMoreCategoryFirstClick" @click="addOnceNewCategory()">
+            <div class="addMoreCategory" @click="addInputTypeProduct()">
               <span>Добавить категорию</span>
               <svg xmlns="http://www.w3.org/2000/svg" width="29" height="29" viewBox="0 0 29 29" fill="none">
                 <circle cx="14.5" cy="14.5" r="14.5" fill="white"/>
               </svg>
             </div>
           </div>
-          <div class="all_types">
-
-            <div v-for="(productType, indx) in form.typeProducts" :key="indx" class="all_prod_types w-100 pt-1 pb-1">
-              <div class="form_tp">
-                <div class="from_tp_in w-10/12">
-                  <el-select
-                      v-model="productType.name"
-                      filterable
-                      allow-create
-                      default-first-option
-                      :reserve-keyword="false"
-                      placeholder="Name Your type products"
-                      no-data-text="No data"
-                      class="w-full"
-                      @change="changeProductType(productType)"
-                  >
-                    <el-option
-                        v-for="general_type_product in general_type_products"
-                        :key="general_type_product.name"
-                        :label="general_type_product.name"
-                        :value="general_type_product.name"
-                    />
-                  </el-select>
-                </div>
-                <div class="form_tp_clr">
-                  <div class="clr_btn" @click="toggleDropdownTP(indx)" :style="{background: productType.color}" ref="dropdownTP"></div>
-                  <div class="plt_clr" v-if="productType.showDropdown">
-                    <div v-if="productType.color">
-                      <color-picker
-                          :width="240"
-                          :height="240"
-                          :start-color="productType.color"
-                          v-model="productType.color"
-                          :style="{background: productType.color, borderRadius: '50%'}"
-                      >
-                      </color-picker>
-                    </div>
-                    <div v-else>
-                      <color-picker
-                          :width="240"
-                          :height="240"
-                          start-color="#ffffff"
-                          v-model="productType.color"
-                          :style="{background: productType.color, borderRadius: '50%'}"
-                      >
-                      </color-picker>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <!--------------------------------------------------------------------------------------------------------------------->
-              <div class="all_prods">
-                <span>Select Your Products: </span>
-                <div class="container mx-auto align-middle flex w-full">
-                  <div class="sm:mx-auto h-full flex flex-col items-center justify-center w-full">
-                    <div v-for="(product, index) in productType.products" :key="index"
-                         class="bg-white w-full rounded-lg pt-1 pb-1">
-                      <div class="form_tp">
-                        <div class="from_tp_in w-10/12">
-                          <el-select
-                              v-model="product.name"
-                              filterable
-                              allow-create
-                              default-first-option
-                              :reserve-keyword="false"
-                              placeholder="Name Your Products"
-                              no-data-text="No data"
-                              class="w-full"
-                          >
-                            <el-option
-                                v-for="general_product in general_products"
-                                :key="general_product.name"
-                                :label="general_product.name"
-                                :value="general_product.name"
-                            />
-                          </el-select>
-                        </div>
-                      </div>
-
-                      <p>Count: </p>
-                      <div class="count_gen">
-                        <div class="count_c">
-                          <el-input-number v-model="product.count" :min="1" :max="999999999" />
-                        </div>
-                        <div class="type_count">
-                          <el-select
-                              v-model="product.type_count_id"
-                              placeholder="Select"
-                              class="w-full"
-                          >
-                            <el-option
-                                v-for="type_count in type_counts"
-                                :key="type_count.name"
-                                :label="type_count.name"
-                                :value="type_count.id"
-                            />
-                          </el-select>
-                        </div>
-                      </div>
-                      <div class="comm">
-                        <template>
-                          <el-input
-                              v-model="product.comment"
-                              :rows="2"
-                              type="textarea"
-                              placeholder="Comment"
-                          />
-                        </template>
-                      </div>
-
-                      <div class="pl_btn_bl gutter">
-                        <el-button type="primary" @click="addInputProduct(indx)" class="px-6">
-                          + p
-                        </el-button>
-                        <el-button type="danger" @click="removeInputProduct(indx, product.id, index)" class="px-6">
-                          - p
-                        </el-button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!--------------------------------------------------------------------------------------------------------------------->
-              <div class="pl_btn_bl gutter">
-                <el-button type="primary" @click="addInputTypeProduct" class="px-6">
-                  + tp
-                </el-button>
-                <el-button type="danger" @click="removeInputTypeProduct(indx, productType.id)" class="px-6">
-                  - tp
-                </el-button>
-              </div>
-            </div>
-          </div>
 <!--------------------------------------------------------------------------------------------------------------------->
-          <el-form-item class="mb-0 text-center w-3/5">
+          <el-form-item class="mb-0 text-center w-3/5 btn-save">
             <el-button type="success" @click="create('form')" class="px-6 w-full">
               Сохранить
             </el-button>
@@ -311,6 +279,8 @@ export default {
           }
         ],
       });
+      const categoriesIn = document.querySelector('.categories_in');
+      categoriesIn.classList.add('clicked')
     },
     async removeInputTypeProduct(index, indexTypeProduct) {
       this.form.typeProducts.splice(index, 1);
@@ -594,78 +564,51 @@ export default {
     display: flex;
     flex-direction: column;
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  .all_prods, .all_types {
-    padding: 10px;
-    margin: 10px 0;
-    border: 1px solid #e5e7eb;
-    border-radius: 8px;
-  }
-
-  .all_types {
-    width: 60%;
-  }
-
-  .comm {
-    margin-bottom: 20px;
-  }
-
-  .count_gen {
-    display: flex;
-    margin-bottom: 20px;
-  }
-
-  .form_pl {
-    display: flex;
-    flex-direction: column;
+  .btn-save {
+    padding: 15px;
     width: 100%;
-    position: relative;
+  }
+  .all_prod_types {
+    border-radius: 5px;
+    border: 1px solid #555;
+    padding: 15px;
+  }
+  .el-input__inner {
+    background-color: #303030;
+    border-color: #555;
+    padding: 18px 21px;
+    font-size: 15px;
+    color: #A5A5A5;;
+  }
+  .el-range-editor.is-active, .el-range-editor.is-active:hover, .el-select .el-input.is-focus .el-input__inner {
+    background-color: #303030;
+    border-color: #555;
+    color: #A5A5A5;
+  }
+  .el-select .el-input__inner:focus {
+    background-color: #303030;
+    border-color: #555;
+    color: #A5A5A5;
+  }
+  .el-select-dropdown {
+    background-color: #303030;
+    border-color: #555;
+    color: #A5A5A5;
+  }
+  .el-select-dropdown__item.hover {
+    background-color: #303030;
+    border-color: #555;
+    color: #b0afaf;
   }
 
-  .form_tp {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    position: relative;
-  }
 
-  .form_pl_clr, .form_tp_clr {
-    width: 15%;
-  }
 
-  .clr_btn {
-    display: flex;
-    height: 40px;
-    width: 100%;
-    border-radius: 4px;
-    border: 1px solid #9ca3af;
-  }
 
-  .plt_clr {
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translate(-50%, 40px);
-    z-index: 9;
-  }
+
+
+
+
+
+
+
 </style>
