@@ -3,72 +3,68 @@
     <div class="h-full flex flex-col items-center justify-center w-full">
       <div class="w-full rounded-lg prod-list-form">
         <h1 class="text-center w-full pb-5 text-2xl">Создать список</h1>
-        <el-form :model="form" status-icon ref="form" class="flex flex-col justify-center items-center">
-          <div class="form_pl">
-            <el-form-item prop="name" class="w-full">
-              <div class="form_pl_inp">
-                <span>Имя списка</span>
-                <el-input placeholder="Введите имя " type="name" v-model="form.name"></el-input>
-                <span class="is_invalid" v-if="err.name"> {{ err.name[0] }}</span>
-              </div>
-            </el-form-item>
-            <div class="title_color">Цвет списка</div>
-            <div class="custom_colors">
-              <el-radio-group
-                class="label_custom_group"
-                v-model="form.color"
-                size="large"
-              >
-                <carousel
-                    :per-page="7"
-                    :navigationEnabled="true"
-                    :paginationEnabled="false"
-                >
-                  <slide v-for="(color, index) in colors">
-                    <span
-                      class="custom_colors_span"
-                      :style="{color: color.color, borderColor: color.color}"
-                      :class="{ 'is-checked': isCheckedIndex === index }"
-                      @click="handleColorClick(index)"
-                    >
-                      <el-radio
-                        class="label_custom swiper-slide"
-                        :label="color.color"
-                      />
-                    </span>
-                  </slide>
-                </carousel>
-              </el-radio-group>
-            </div>
-          </div>
-<!--------------------------------------------------------------------------------------------------------------------->
-          <div class="categories">
-            <div class="categories_in">
-              <div v-for="(productType, indx) in form.typeProducts" :key="indx" class="all_prod_types w-100 pt-1 pb-1">
-                <div class="form_tp">
-                  <div class="from_tp_in w-full">
-                    <el-select
-                        v-model="productType.name"
-                        filterable
-                        allow-create
-                        default-first-option
-                        :reserve-keyword="false"
-                        placeholder="Выберите категорию"
-                        no-data-text="No data"
-                        class="w-full"
-                        @change="changeProductType(productType)"
-                    >
-                      <el-option
-                          v-for="general_type_product in general_type_products"
-                          :key="general_type_product.name"
-                          :label="general_type_product.name"
-                          :value="general_type_product.name"
-                      />
-                    </el-select>
-                  </div>
-                </div>
 
-                <!--------------------------------------------------------------------------------------------------------------------->
+        <ProductListForm
+            :form="form"
+            :err="err"
+            :generalTypeProducts="general_type_products"
+            :generalProducts="general_products"
+            :typeCounts="type_counts"
+            :colors="colors"
+            :isCheckedIndex="isCheckedIndex"
+            @create="create"
+            @addInputProduct="addInputProduct"
+            @removeInputProduct="removeInputProduct"
+            @addInputTypeProduct="addInputTypeProduct"
+            @removeInputTypeProduct="removeInputTypeProduct"
+            @changeProductType="changeProductType"
+            @handleColorClick="handleColorClick"
+        />
+<!--        <el-form :model="form" status-icon ref="form" class="flex flex-col justify-center items-center">-->
+<!--          <div class="form_pl">-->
+<!--            <el-form-item prop="name" class="w-full">-->
+<!--              <div class="form_pl_inp">-->
+<!--                <span>Имя списка</span>-->
+<!--                <el-input placeholder="Введите имя " type="name" v-model="form.name"></el-input>-->
+<!--                <span class="is_invalid" v-if="err.name"> {{ err.name[0] }}</span>-->
+<!--              </div>-->
+<!--            </el-form-item>-->
+<!--            <div class="title_color">Цвет списка</div>-->
+<!--            <ColorSelector-->
+<!--              :selectedColor="form.color"-->
+<!--              :isCheckedIndex="isCheckedIndex"-->
+<!--              :handleColorClick="handleColorClick"-->
+<!--              :colors="colors"-->
+<!--            />-->
+<!--          </div>-->
+<!--&lt;!&ndash;-&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&ndash;&gt;-->
+<!--          <div class="categories">-->
+<!--            <div class="categories_in">-->
+<!--              <div v-for="(productType, indx) in form.typeProducts" :key="indx" class="all_prod_types w-100 pt-1 pb-1">-->
+<!--                <div class="form_tp">-->
+<!--                  <div class="from_tp_in w-full">-->
+<!--                    <el-select-->
+<!--                        v-model="productType.name"-->
+<!--                        filterable-->
+<!--                        allow-create-->
+<!--                        default-first-option-->
+<!--                        :reserve-keyword="false"-->
+<!--                        placeholder="Выберите категорию"-->
+<!--                        no-data-text="No data"-->
+<!--                        class="w-full"-->
+<!--                        @change="changeProductType(productType)"-->
+<!--                    >-->
+<!--                      <el-option-->
+<!--                          v-for="general_type_product in general_type_products"-->
+<!--                          :key="general_type_product.id"-->
+<!--                          :label="general_type_product.name"-->
+<!--                          :value="general_type_product.name"-->
+<!--                      />-->
+<!--                    </el-select>-->
+<!--                  </div>-->
+<!--                </div>-->
+
+<!--                &lt;!&ndash;-&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&ndash;&gt;-->
 <!--                <div class="all_prods">-->
 <!--                  <span>Select Your Products: </span>-->
 <!--                  <div class="container mx-auto align-middle flex w-full">-->
@@ -89,7 +85,7 @@
 <!--                            >-->
 <!--                              <el-option-->
 <!--                                  v-for="general_product in general_products"-->
-<!--                                  :key="general_product.name"-->
+<!--                                  :key="general_product.id"-->
 <!--                                  :label="general_product.name"-->
 <!--                                  :value="general_product.name"-->
 <!--                              />-->
@@ -140,39 +136,43 @@
 <!--                    </div>-->
 <!--                  </div>-->
 <!--                </div>-->
-                <!--------------------------------------------------------------------------------------------------------------------->
-                <div class="pl_btn_bl gutter">
-<!--                  <el-button type="danger" @click="removeInputTypeProduct(indx, productType.id)" class="px-6">-->
-<!--                    - tp-->
-<!--                  </el-button>-->
-                </div>
-              </div>
-            </div>
-            <div class="addMoreCategory" @click="addInputTypeProduct()">
-              <span>Добавить категорию</span>
-              <svg xmlns="http://www.w3.org/2000/svg" width="29" height="29" viewBox="0 0 29 29" fill="none">
-                <circle cx="14.5" cy="14.5" r="14.5" fill="white"/>
-              </svg>
-            </div>
-          </div>
-<!--------------------------------------------------------------------------------------------------------------------->
-          <el-form-item class="mb-0 text-center w-3/5 btn-save">
-            <el-button type="success" @click="create('form')" class="px-6 w-full">
-              Сохранить
-            </el-button>
-          </el-form-item>
-        </el-form>
+<!--                &lt;!&ndash;-&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&ndash;&gt;-->
+<!--                <div class="pl_btn_bl gutter">-->
+<!--&lt;!&ndash;                  <el-button type="danger" @click="removeInputTypeProduct(indx, productType.id)" class="px-6">&ndash;&gt;-->
+<!--&lt;!&ndash;                    - tp&ndash;&gt;-->
+<!--&lt;!&ndash;                  </el-button>&ndash;&gt;-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--            <div class="addMoreCategory" @click="addInputTypeProduct()">-->
+<!--              <span>Добавить категорию</span>-->
+<!--              <svg xmlns="http://www.w3.org/2000/svg" width="29" height="29" viewBox="0 0 29 29" fill="none">-->
+<!--                <circle cx="14.5" cy="14.5" r="14.5" fill="white"/>-->
+<!--              </svg>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--&lt;!&ndash;-&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&ndash;&gt;-->
+<!--          <el-form-item class="mb-0 text-center w-3/5 btn-save">-->
+<!--            <el-button type="success" @click="create('form')" class="px-6 w-full">-->
+<!--              Сохранить-->
+<!--            </el-button>-->
+<!--          </el-form-item>-->
+<!--        </el-form>-->
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import loginForm from "../../components/auth/LoginForm";
+import ProductListForm from "../../components/ProductListForm";
 
 export default {
   name: "create",
   middleware: 'auth',
+
+  components: {
+    ProductListForm
+  },
 
   data() {
     return {
@@ -180,21 +180,7 @@ export default {
         name: '',
         color: '',
         user_id: this.$auth.user.id,
-        typeProducts: [{
-          name: '',
-          color: '',
-          showDropdown: false,
-          products: [
-            {
-              name: '',
-              count: '',
-              color: '',
-              type_count_id: '',
-              comment: '',
-              showDropdown: false,
-            }
-          ],
-        }],
+        typeProducts: [],
       },
       err: {},
       general_type_products: [],
@@ -204,6 +190,7 @@ export default {
       type_counts: [],
       showDropdownPL: false,
       isCheckedIndex: null,
+      showNewCategorySelector: false,
       colors: [
         { id: 1, color: '#006eff' },
         { id: 2, color: '#ff5858' },
@@ -258,6 +245,7 @@ export default {
         name: '',
         count: '',
         type_count_id: '',
+        color: '',
         comment: '',
         showDropdown: false,
       });
@@ -268,21 +256,14 @@ export default {
     async addInputTypeProduct() {
       this.form.typeProducts.push({
         name: '',
-        showDropdown: false,
-        products: [
-          {
-            name: '',
-            count: '',
-            type_count_id: '',
-            comment: '',
-            showDropdown: false,
-          }
-        ],
+        products: [],
       });
+      this.form.typeProducts[this.form.typeProducts.length - 1].showNewCategorySelector = true;
+
       const categoriesIn = document.querySelector('.categories_in');
       categoriesIn.classList.add('clicked')
     },
-    async removeInputTypeProduct(index, indexTypeProduct) {
+    async removeInputTypeProduct(index) {
       this.form.typeProducts.splice(index, 1);
     },
     async changeProductType(productType) {
@@ -340,40 +321,6 @@ export default {
         })
         .catch(err => console.log(err))
     },
-    handleClickOutside(event) {
-      const target = event.target;
-      const dropdown = this.$refs.dropdown;
-
-      if (dropdown && !dropdown.contains(target) && !target.classList.contains('farbtastic-overlay')) {
-        this.showDropdownPL = false;
-      }
-    },
-    handleClickTPOutside(event) {
-      const targetTP = event.target;
-      const dropdownTP = this.$refs.dropdownTP;
-
-      for (let tpIndex = 0; tpIndex < dropdownTP.length; tpIndex++) {
-        if (dropdownTP[tpIndex] && !dropdownTP[tpIndex].contains(targetTP) && !targetTP.classList.contains('farbtastic-overlay')) {
-          for (let i = 0; i < this.form.typeProducts.length; i++) {
-            this.form.typeProducts[i].showDropdown = false;
-          }
-        }
-      }
-    },
-    handleClickPOutside(event) {
-      const targetP = event.target;
-      const dropdownP = this.$refs.dropdownP;
-
-      for (let pIndex = 0; pIndex < dropdownP.length; pIndex++) {
-        if (dropdownP[pIndex] && !dropdownP[pIndex].contains(targetP) && !targetP.classList.contains('farbtastic-overlay')) {
-          for (let i = 0; i < this.form.typeProducts.length; i++) {
-            for (let j = 0; j < this.form.typeProducts[i].products.length; j++) {
-              this.form.typeProducts[i].products[j].showDropdown = false;
-            }
-          }
-        }
-      }
-    },
     handleColorClick(index) {
       if (this.isCheckedIndex !== null) {
         // Убираем класс у предыдущего выбранного элемента
@@ -384,32 +331,26 @@ export default {
         );
       }
 
-      // Добавляем класс текущему выбранному элементу
       this.$set(this.colors[index], 'isChecked', true);
       this.isCheckedIndex = index;
+      this.form.color = this.colors[index + 1].color;
     },
     addOnceNewCategory() {
       const addBtn = document.querySelector('.addMoreCategory');
       const categoriesIn = document.querySelector('.categories_in');
       addBtn.classList.add('addMoreCategoryClicked')
       categoriesIn.classList.add('clicked')
+    },
+    updateSelectedColor(value) {
+      this.form.color = value;
     }
   },
   mounted() {
     this.fetchGeneralTypeProducts()
-    // this.fetchGeneralProduct()
     this.fetchTypeCounts()
     this.fetchBasicTypeProducts()
     this.fetchBasicProducts()
-    // window.addEventListener('click', this.handleClickOutside);
-    // window.addEventListener('click', this.handleClickTPOutside);
-    // window.addEventListener('click', this.handleClickPOutside);
   },
-  // beforeDestroy() {
-  //   window.removeEventListener('click', this.handleClickOutside);
-  //   window.removeEventListener('click', this.handleClickTPOutside);
-  //   window.removeEventListener('click', this.handleClickPOutside);
-  // },
 }
 </script>
 
@@ -535,29 +476,9 @@ export default {
     width: 100%;
     padding: 0 16px;
   }
-  .addMoreCategory {
-    display: flex;
-    justify-content: space-between;
-    padding: 15px 21px;
-    background-color: #D9D9D959;
-    width: 100%;
-    border-radius: 5px;
-    align-items: center;
-  }
-  .addMoreCategory span {
-    color: #FFF;
-    font-size: 15px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: normal;
-  }
-
-  .addMoreCategory.addMoreCategoryClicked {
-    display: none;
-  }
 
   .categories_in {
-    display: none;
+    /*display: none;*/
   }
 
   .categories_in.clicked {
@@ -578,17 +499,34 @@ export default {
     border-color: #555;
     padding: 18px 21px;
     font-size: 15px;
-    color: #A5A5A5;;
+    color: #A5A5A5;
   }
-  .el-range-editor.is-active, .el-range-editor.is-active:hover, .el-select .el-input.is-focus .el-input__inner {
+  .el-input.is-disabled .el-input__inner {
+    background-color: #303030;
+    padding: 18px 21px 18px 0;
+    font-size: 15px;
+    color: #A5A5A5;
+    border: none;
+  }
+  .el-input.is-disabled .el-input__suffix {
+    display: none;
+  }
+  .el-range-editor.is-active,
+  .el-range-editor.is-active:hover,
+  .el-select .el-input.is-focus .el-input__inner {
     background-color: #303030;
     border-color: #555;
     color: #A5A5A5;
   }
-  .el-select .el-input__inner:focus {
+  .el-select .el-input__inner:focus,
+  .el-select .el-input.is-disabled .el-input__inner:hover {
     background-color: #303030;
     border-color: #555;
     color: #A5A5A5;
+  }
+  .el-select .el-input.is-disabled .el-input__inner:hover,
+  .el-input.is-disabled .el-input__icon {
+    cursor: default;
   }
   .el-select-dropdown {
     background-color: #303030;
