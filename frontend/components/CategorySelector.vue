@@ -36,7 +36,7 @@
             />
           </div>
         </div>
-        <div class="addMoreProduct" @click="addInputProduct(indx)">
+        <div class="addMoreProduct" :class="{ 'disabled': isAddProductButtonDisabled }" @click="addInputProduct(indx)">
           <span>Добавить продукт</span>
           <svg xmlns="http://www.w3.org/2000/svg" width="29" height="29" viewBox="0 0 29 29" fill="none">
             <circle cx="14.5" cy="14.5" r="14.5" fill="white"/>
@@ -54,7 +54,7 @@ export default {
   name: "CategorySelector",
   data() {
     return {
-      showProductClass: false
+      showProductClass: false,
     }
   },
   components: {
@@ -69,6 +69,9 @@ export default {
   ],
   methods: {
     addInputProduct(typeProductIndex) {
+      if (this.productType.products.length > 0 && this.productType.products[0].name === '') {
+        return;
+      }
       this.$emit('addInputProduct', typeProductIndex);
       this.showProductClass = true;
     },
@@ -84,6 +87,9 @@ export default {
       return (productType) => {
         return productType.name !== '';
       };
+    },
+    isAddProductButtonDisabled() {
+      return this.productType.products.some(product => product.name === '');
     },
   },
 }
@@ -110,6 +116,10 @@ export default {
   font-style: normal;
   font-weight: 400;
   line-height: normal;
+}
+.addMoreProduct.disabled {
+  opacity: 0.5;
+  pointer-events: none;
 }
 /*.product_cl {*/
 /*  background-color: #404040;*/

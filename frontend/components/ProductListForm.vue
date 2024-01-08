@@ -111,6 +111,7 @@ export default {
   width: 100%;
   border-radius: 5px;
   align-items: center;
+  cursor: pointer;
 }
 .addMoreCategory span {
   color: #FFF;

@@ -274,19 +274,19 @@ export default {
         productType.color = await generalTypeProduct.color;
       }
 
-      if (productType.name) {
-        await this.$axios.get('/general-products-by-name/get/' + productType.name)
-            .then((res) => {
-              this.general_products = res.data.data
-            })
-            .catch(err => console.log(err))
-      } else {
-        await this.$axios.get('/general-products/get/')
-            .then((res) => {
-              this.general_products = res.data.data.data
-            })
-            .catch(err => console.log(err))
-      }
+      // if (productType.name) {
+      //   await this.$axios.get('/general-products-by-name/get/' + productType.name)
+      //       .then((res) => {
+      //         this.general_products = res.data.data
+      //       })
+      //       .catch(err => console.log(err))
+      // } else {
+      //   await this.$axios.get('/general-products/get/')
+      //       .then((res) => {
+      //         this.general_products = res.data.data.data
+      //       })
+      //       .catch(err => console.log(err))
+      // }
     },
     async changeDefaultProductColor(product) {
       const generalProduct = this.general_products.find(
@@ -323,7 +323,6 @@ export default {
     },
     handleColorClick(index) {
       if (this.isCheckedIndex !== null) {
-        // Убираем класс у предыдущего выбранного элемента
         this.$set(
           this.colors[this.isCheckedIndex],
           'isChecked',
@@ -333,13 +332,7 @@ export default {
 
       this.$set(this.colors[index], 'isChecked', true);
       this.isCheckedIndex = index;
-      this.form.color = this.colors[index + 1].color;
-    },
-    addOnceNewCategory() {
-      const addBtn = document.querySelector('.addMoreCategory');
-      const categoriesIn = document.querySelector('.categories_in');
-      addBtn.classList.add('addMoreCategoryClicked')
-      categoriesIn.classList.add('clicked')
+      this.form.color = this.colors[index].color;
     },
     updateSelectedColor(value) {
       this.form.color = value;

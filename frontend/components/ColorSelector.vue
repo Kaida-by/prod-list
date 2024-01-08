@@ -10,6 +10,7 @@
           :per-page="7"
           :navigationEnabled="true"
           :paginationEnabled="false"
+          :scroll-per-page="false"
       >
         <slide v-for="(color, index) in colors">
           <span
