@@ -187,7 +187,7 @@ export default {
 .options-window {
   position: absolute;
   top: 9px;
-  right: 14px;
+  right: 6px;
   width: max-content;
   height: inherit;
   background-color: #303030;

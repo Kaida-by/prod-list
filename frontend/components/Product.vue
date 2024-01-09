@@ -1,5 +1,6 @@
 <template>
   <div class="w-full rounded-lg pt-1 pb-1 single-prod" :class="{ 'added-class': product.showClass }">
+    <div class="left_vertical_line" :style="{ background: product.color }"></div>
     <div class="form_tp">
       <div class="from_tp_in">
         <el-select
@@ -118,6 +119,9 @@ export default {
 </script>
 
 <style>
+.left_vertical_line {
+  display: none;
+}
 .single-prod {
   background-color: #404040;
   border-radius: 5px;
@@ -135,7 +139,7 @@ export default {
 .el-input-number > .el-input-number__decrease,
 .el-input-number > .el-input-number__increase {
   background-color: #404040;
-  height: 53px;
+  height: 52px;
   width: 54px;
   border-bottom: 1px solid #505050!important;
   display: flex;
@@ -200,6 +204,9 @@ export default {
 .count_gen,
 .pl_btn_bl.gutter {
   display: block;
+}
+.single-prod.added-class {
+  position: relative;
 }
 .single-prod.added-class .count_gen,
 .single-prod.added-class .pl_btn_bl.gutter {
@@ -266,5 +273,13 @@ export default {
 }
 .single-prod.added-class .from_tp_in {
   display: flex;
+}
+.single-prod.added-class .left_vertical_line {
+  display: block;
+  position: absolute;
+  top: 16px;
+  left: -16px;
+  height: 24px;
+  width: 1px;
 }
 </style>

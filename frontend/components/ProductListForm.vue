@@ -102,7 +102,16 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
+.title_color {
+  color: #A5A5A5;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  margin-top: 15px;
+  padding: 0 17px;
+}
 .addMoreCategory {
   display: flex;
   justify-content: space-between;
