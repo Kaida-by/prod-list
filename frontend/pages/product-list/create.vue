@@ -136,11 +136,11 @@
 <!--                    </div>-->
 <!--                  </div>-->
 <!--                </div>-->
-<!--                &lt;!&ndash;-&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&ndash;&gt;-->
+                <!--------------------------------------------------------------------------------------------------------------------->
 <!--                <div class="pl_btn_bl gutter">-->
-<!--&lt;!&ndash;                  <el-button type="danger" @click="removeInputTypeProduct(indx, productType.id)" class="px-6">&ndash;&gt;-->
-<!--&lt;!&ndash;                    - tp&ndash;&gt;-->
-<!--&lt;!&ndash;                  </el-button>&ndash;&gt;-->
+<!--                  <el-button type="danger" @click="removeInputTypeProduct(indx, productType.id)" class="px-6">-->
+<!--                    - tp-->
+<!--                  </el-button>-->
 <!--                </div>-->
 <!--              </div>-->
 <!--            </div>-->
@@ -250,8 +250,12 @@ export default {
         showDropdown: false,
       });
     },
-    async removeInputProduct(typeProductIndex, productId, productIndex) {
-      this.form.typeProducts[typeProductIndex].products.splice(productIndex, 1);
+    async removeInputProduct(typeProductIndex, productIndex) {
+      if (productIndex === undefined) {
+        this.form.typeProducts[typeProductIndex].products.splice(0, 1);
+      } else {
+        this.form.typeProducts[typeProductIndex].products.splice(productIndex, 1);
+      }
     },
     async addInputTypeProduct() {
       this.form.typeProducts.push({

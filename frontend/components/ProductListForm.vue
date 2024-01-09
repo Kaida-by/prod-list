@@ -80,8 +80,8 @@ export default {
     addInputProduct(typeProductIndex) {
       this.$emit('addInputProduct', typeProductIndex);
     },
-    removeInputProduct(typeProductIndex, productId, productIndex) {
-      this.$emit('removeInputProduct', typeProductIndex, productId, productIndex);
+    removeInputProduct(typeProductIndex, productIndex) {
+      this.$emit('removeInputProduct', typeProductIndex, productIndex);
     },
     addInputTypeProduct() {
       this.$emit('addInputTypeProduct');

@@ -21,13 +21,26 @@
             :value="general_type_product.name"
           />
         </el-select>
+        <div v-if="isCategorySelected(productType)" class="category-options" @click="openCategoryOptions">
+          <span>.</span>
+          <span>.</span>
+          <span>.</span>
+          <div class="options-window" v-show="showOptionsWindow"  @click.stop>
+            <span @click="removeInputTypeProduct(indx, productType.id)">
+              <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="100" height="100" viewBox="0 0 24 24">
+                <path d="M 10 2 L 9 3 L 3 3 L 3 5 L 21 5 L 21 3 L 15 3 L 14 2 L 10 2 z M 4.3652344 7 L 6.0683594 22 L 17.931641 22 L 19.634766 7 L 4.3652344 7 z"></path>
+              </svg>
+            </span>
+          </div>
+        </div>
       </div>
       <div v-if="isCategorySelected(productType)">
         <div :class="{'product_cl': showProductClass}">
           <div class="all_prods">
             <Product
               v-for="(product, index) in productType.products"
-              :key="index"
+              :typeProductKey="indx"
+              :productKey="index"
               :product="product"
               :generalProducts="generalProducts"
               :typeCounts="typeCounts"
@@ -55,6 +68,7 @@ export default {
   data() {
     return {
       showProductClass: false,
+      showOptionsWindow: false,
     }
   },
   components: {
@@ -66,21 +80,46 @@ export default {
     'generalTypeProducts',
     'typeCounts',
     'indx',
+    'typeProductKey',
+    'productKey'
   ],
   methods: {
     addInputProduct(typeProductIndex) {
       if (this.productType.products.length > 0 && this.productType.products[0].name === '') {
         return;
       }
+      this.productType.products.forEach((product, index) => {
+        if (index !== this.productType.products.length - 2) {
+          this.$set(this.productType.products, index, { ...product, showClass: true });
+        }
+      });
       this.$emit('addInputProduct', typeProductIndex);
       this.showProductClass = true;
     },
-    removeInputProduct(typeProductIndex, productId, productIndex) {
-      this.$emit('removeInputProduct', typeProductIndex, productId, productIndex);
+    removeInputProduct(typeProductIndex, productIndex) {
+      this.$emit('removeInputProduct', typeProductIndex, productIndex);
     },
     changeProductType(productType) {
       this.$emit('changeProductType', productType)
-    }
+    },
+    removeInputTypeProduct(index) {
+      this.$emit('removeInputTypeProduct', index);
+      this.showOptionsWindow = false;
+    },
+    openCategoryOptions() {
+      this.showOptionsWindow = !this.showOptionsWindow;
+    },
+    handleGlobalClick(event) {
+      if (this.showOptionsWindow && !this.$el.contains(event.target)) {
+        this.showOptionsWindow = false;
+      }
+    },
+  },
+  mounted() {
+    document.addEventListener('click', this.handleGlobalClick);
+  },
+  destroyed() {
+    document.removeEventListener('click', this.handleGlobalClick);
   },
   computed: {
     isCategorySelected() {
@@ -109,6 +148,7 @@ export default {
   border-radius: 5px;
   border: 1px solid #00D359;
   margin-top: 15px;
+  cursor: pointer;
 }
 .addMoreProduct span {
   color: #FFF;
@@ -120,6 +160,48 @@ export default {
 .addMoreProduct.disabled {
   opacity: 0.5;
   pointer-events: none;
+}
+.selected-category {
+  display: flex;
+}
+.category-options {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 33px;
+  height: 42px;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.category-options span {
+  height: 7px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  color: #555555;
+}
+.options-window {
+  position: absolute;
+  top: 9px;
+  right: 14px;
+  width: max-content;
+  height: inherit;
+  background-color: #303030;
+  display: flex;
+  align-items: center;
+}
+.options-window span {
+  font-size: 16px;
+  width: 24px;
+  height: 24px;
+  color: #fff;
+}
+.options-window span svg path {
+  fill: #A5A5A5;
 }
 /*.product_cl {*/
 /*  background-color: #404040;*/

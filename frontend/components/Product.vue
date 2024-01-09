@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full rounded-lg pt-1 pb-1 single-prod">
+  <div class="w-full rounded-lg pt-1 pb-1 single-prod" :class="{ 'added-class': product.showClass }">
     <div class="form_tp">
       <div class="from_tp_in">
         <el-select
@@ -20,6 +20,23 @@
               :value="general_product.name"
           />
         </el-select>
+        <div class="product-options" @click="openProductOptions">
+          <span>.</span>
+          <span>.</span>
+          <span>.</span>
+          <div class="product-options-window" v-show="showProductOptionsWindow"  @click.stop>
+            <span @click="removeInputProduct(typeProductKey, productKey)">
+              <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="100" height="100" viewBox="0 0 24 24">
+                <path d="M 10 2 L 9 3 L 3 3 L 3 5 L 21 5 L 21 3 L 15 3 L 14 2 L 10 2 z M 4.3652344 7 L 6.0683594 22 L 17.931641 22 L 19.634766 7 L 4.3652344 7 z"></path>
+              </svg>
+            </span>
+            <span @click="updateInputProduct(typeProductKey, productKey)">
+              <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="100" height="100" viewBox="0 0 24 24">
+                <path d="M 18.414062 2 C 18.158062 2 17.902031 2.0979687 17.707031 2.2929688 L 15.707031 4.2929688 L 14.292969 5.7070312 L 3 17 L 3 21 L 7 21 L 21.707031 6.2929688 C 22.098031 5.9019687 22.098031 5.2689063 21.707031 4.8789062 L 19.121094 2.2929688 C 18.926094 2.0979687 18.670063 2 18.414062 2 z M 18.414062 4.4140625 L 19.585938 5.5859375 L 18.292969 6.8789062 L 17.121094 5.7070312 L 18.414062 4.4140625 z M 15.707031 7.1210938 L 16.878906 8.2929688 L 6.171875 19 L 5 19 L 5 17.828125 L 15.707031 7.1210938 z"></path>
+              </svg>
+            </span>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -44,7 +61,7 @@
     </div>
 
     <div class="pl_btn_bl gutter">
-      <!-- ... Остальной код для кнопок или других элементов продукта ... -->
+      <div class="removeProduct" @click="removeInputProduct(typeProductKey, productKey)">Удалить</div>
     </div>
   </div>
 </template>
@@ -55,11 +72,25 @@ export default {
   props: [
     'product',
     'generalProducts',
-    'typeCounts'
+    'typeCounts',
+    'typeProductKey',
+    'productKey'
   ],
+  data() {
+    return {
+      showProductOptionsWindow: false,
+    }
+  },
   methods: {
-    removeInputProduct(indx, productId, index) {
-      this.$emit('removeInputProduct', indx, productId, index);
+    removeInputProduct(TypeProductIndex, productIndex) {
+      this.$emit('removeInputProduct', TypeProductIndex, productIndex);
+    },
+    updateInputProduct(TypeProductIndex, productIndex) {
+      if (!this.product.showClass) {
+        return;
+      }
+
+      this.product.showClass = false;
     },
     updateProductColor() {
       const generalProduct = this.generalProducts.find(product => product.name === this.product.name);
@@ -67,7 +98,21 @@ export default {
         this.product.color = generalProduct.color;
         this.product.type_count_id = 1;
       }
-    }
+    },
+    openProductOptions() {
+      this.showProductOptionsWindow = !this.showProductOptionsWindow;
+    },
+    handleGlobalClick(event) {
+      if (this.showProductOptionsWindow && !this.$el.contains(event.target)) {
+        this.showProductOptionsWindow = false;
+      }
+    },
+  },
+  mounted() {
+    document.addEventListener('click', this.handleGlobalClick);
+  },
+  destroyed() {
+    document.removeEventListener('click', this.handleGlobalClick);
   },
 }
 </script>
@@ -129,5 +174,97 @@ export default {
 .el-input-number__increase:hover:not(.is-disabled)~.el-input .el-input__inner:not(.is-disabled) {
   border-color: #505050!important;
 }
+.removeProduct {
+  display: flex;
+  justify-content: center;
+  padding: 15px 21px;
+  background-color: #555555;
+  width: 100%;
+  align-items: center;
+  border-radius: 5px;
+  border: none;
+  margin-top: 15px;
+  cursor: pointer;
+}
+.removeProduct span {
+  color: #FFF;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+.removeProduct.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+.count_gen,
+.pl_btn_bl.gutter {
+  display: block;
+}
+.single-prod.added-class .count_gen,
+.single-prod.added-class .pl_btn_bl.gutter {
+  display: none;
+}
+.single-prod.added-class .form_tp .el-input__inner {
+  border: none;
+  padding: 0;
+}
+.product-options {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 33px;
+  height: 42px;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-top: -19px;
+}
 
+.product-options span {
+  height: 7px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  color: #555555;
+}
+.product-options-window {
+  display: flex;
+  position: absolute;
+  top: 9px;
+  right: 0;
+  width: max-content;
+  height: auto;
+  background-color: #404040;
+  column-gap: 10px;
+  padding: 10px;
+  z-index: 1;
+}
+.product-options-window span {
+  font-size: 16px;
+  width: 24px;
+  height: 24px;
+  color: #fff;
+}
+.product-options-window span svg path {
+  fill: #A5A5A5;
+}
+.single-prod.added-class .from_tp_in .el-select.w-full {
+  display: flex;
+  align-items: center;
+}
+.product-options {
+  display: none;
+}
+.single-prod.added-class .form_tp .el-input__suffix {
+  display: none;
+}
+.single-prod.added-class .product-options {
+  display: flex;
+}
+.single-prod.added-class .from_tp_in {
+  display: flex;
+}
 </style>
