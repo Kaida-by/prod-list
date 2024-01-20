@@ -1,82 +1,50 @@
-FROM tunet/php:8.0.6-fpm
+FROM php:8.1-fpm
 
-RUN apk update \
-    && apk add --no-cache --virtual .build-deps \
-        $PHPIZE_DEPS \
-        zlib-dev \
-        libzip-dev \
-        freetype-dev \
-        libjpeg-turbo-dev \
-        libpng-dev \
-    && apk --no-cache add \
-        git \
-        zsh \
-		zlib \
-		freetype \
-        libjpeg-turbo \
-        libpng \
-        libzip-dev \
-        postgresql-client \
-    && pecl install xdebug-3.0.4 \
-    && docker-php-ext-enable xdebug \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install gd \
-    && docker-php-ext-enable gd \
-    && docker-php-ext-configure zip \
-    && docker-php-ext-install zip \
-    && apk del .build-deps
+# Copy composer.lock and composer.json
+COPY backend/composer.lock backend/composer.json /var/www/
 
-#RUN apk --no-cache add wkhtmltopdf
-COPY --from=madnight/alpine-wkhtmltopdf-builder:0.12.5-alpine3.10 /bin/wkhtmltopdf /bin/wkhtmltopdf
+# Set working directory
+WORKDIR /var/www/backend
 
-RUN apk add --no-cache \
-        libgcc \
-        libstdc++ \
-        libx11 \
-        glib \
-        libxrender \
-        libxext \
-        libintl \
-        ttf-dejavu \
-        ttf-droid \
-        ttf-freefont \
-        ttf-liberation \
-        ttf-ubuntu-font-family \
-        libreoffice-common \
-        xvfb \
-        xvfb-run \
-        openjdk8-jre
+# Install dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libpng-dev \
+    libjpeg62-turbo-dev \
+    libfreetype6-dev \
+    locales \
+    zip \
+    jpegoptim optipng pngquant gifsicle \
+    vim \
+    unzip \
+    git \
+    telnet \
+    curl
 
-RUN set -xe \
-    && apk add --no-cache --purge -uU \
-        libreoffice \
-        curl icu-libs unzip zlib-dev musl \
-        mesa-gl mesa-dri-swrast \
-        libreoffice libreoffice-base libreoffice-lang-uk \
-        ttf-freefont ttf-opensans ttf-ubuntu-font-family ttf-inconsolata \
-        ttf-liberation ttf-dejavu \
-        libstdc++ dbus-x11 \
-    && echo "http://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories \
-    && echo "http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories \
-    && echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories \
-    && apk add --no-cache -U \
-        ttf-font-awesome ttf-mononoki ttf-hack \
-    && rm -rf /var/cache/apk/* /tmp/*
+# Clear cache
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
+# Install extensions
+RUN docker-php-ext-install pdo_mysql exif pcntl
+# RUN docker-php-ext-configure gd --with-gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ --with-png-dir=/usr/include/
+# RUN docker-php-ext-install gd
 
+# Install composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-ARG LINUX_USER_ID
+# Add user for laravel application
+RUN groupadd -g 1000 www
+RUN useradd -u 1000 -ms /bin/bash -g www www
 
-RUN addgroup --gid $LINUX_USER_ID docker \
-    && adduser --uid $LINUX_USER_ID --ingroup docker --home /home/docker --shell /bin/zsh --disabled-password --gecos "" docker
+# Copy existing application directory contents
+COPY . /var/www/backend
 
-USER $LINUX_USER_ID
+# Copy existing application directory permissions
+COPY --chown=www:www . /var/www/backend
 
-RUN wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | zsh || true
-RUN echo 'export ZSH=/home/docker/.oh-my-zsh' > ~/.zshrc \
-    && echo 'ZSH_THEME="simple"' >> ~/.zshrc \
-    && echo 'plugins=(npm)' >> ~/.zshrc \
-    && echo 'source $ZSH/oh-my-zsh.sh' >> ~/.zshrc \
-    && echo 'PROMPT="%{$fg_bold[yellow]%}php_cli@docker_monitor %{$fg_bold[blue]%}%(!.%1~.%~)%{$reset_color%} "' > ~/.oh-my-zsh/themes/simple.zsh-theme
+# Change current user to www
+USER www
 
-WORKDIR /srv/app
+# Expose port 9000 and start php-fpm server
+EXPOSE 9000
+CMD ["php-fpm"]
