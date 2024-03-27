@@ -1,9 +1,12 @@
 body {
   margin: 0;
   height: 100vh;
-  @apply bg-slate-500
+  background: #191B1A;
+  font-family: 'Montserrat', sans-serif;
+  color: #fff;
 }
 
 .container {
+  width: 360px;
   margin: 0 auto;
 }

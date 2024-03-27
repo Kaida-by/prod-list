@@ -44,22 +44,8 @@ class GenerateProductListController extends Controller
             $newTypeProduct->user_id = $userId;
             $newTypeProduct->product_list_id = $this->productList->id;
 
-            $isGeneralTypeProduct = GeneralTypeProduct::where(['name' => $typeProduct->name, 'user_id' => $userId])
-                ->first();
-
-            if (!$isGeneralTypeProduct) {
-                $newGeneralTypeProduct = new GeneralTypeProduct();
-                $newGeneralTypeProduct->name = $typeProduct->name;
-                $newGeneralTypeProduct->color = $typeProduct->color;
-                $newGeneralTypeProduct->user_id = $userId;
-            }
-
             try {
                 $newTypeProduct->save();
-
-                if (!$isGeneralTypeProduct) {
-                    $newGeneralTypeProduct->save();
-                }
             } catch (Exception $exception) {
                 return response()->json([
                     'success' => false,
@@ -82,22 +68,8 @@ class GenerateProductListController extends Controller
                 $newProduct->user_id = $userId;
                 $newProduct->comment = $product->comment;
 
-                $isGeneralProduct = GeneralProduct::where(['name' => $product->name, 'user_id' => $userId])
-                    ->first();
-
-                if (!$isGeneralProduct) {
-                    $newGeneralProduct = new GeneralProduct();
-                    $newGeneralProduct->name = $product->name;
-                    $newGeneralProduct->color = $product->color;
-                    $newGeneralProduct->user_id = $userId;
-                }
-
                 try {
                     $newProduct->save();
-
-                    if (!$isGeneralProduct) {
-                        $newGeneralProduct->save();
-                    }
                 } catch (Exception $exception) {
                     return response()->json([
                         'success' => false,

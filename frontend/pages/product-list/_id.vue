@@ -11,19 +11,6 @@
                 <span class="is_invalid" v-if="err.name"> {{ err.name[0] }}</span>
               </div>
             </el-form-item>
-            <div class="form_pl_clr">
-              <div class="clr_btn" @click="toggleDropdownPL" :style="{background: form.color}" ref="dropdown"></div>
-              <div class="plt_clr" v-if="showDropdownPL">
-                <color-picker
-                    :width="240"
-                    :height="240"
-                    start-color="#ffffff"
-                    v-model="form.color"
-                    :style="{background: form.color, borderRadius: '50%'}"
-                >
-                </color-picker>
-              </div>
-            </div>
           </div>
           <!--------------------------------------------------------------------------------------------------------------------->
           <div class="all_types">
@@ -95,7 +82,6 @@
                               placeholder="Name Your Products"
                               no-data-text="No data"
                               class="w-full"
-                              @change="changeDefaultProductColor(product)"
                           >
                             <el-option
                                 v-for="general_product in general_products"
@@ -104,31 +90,6 @@
                                 :value="general_product.name"
                             />
                           </el-select>
-                        </div>
-                        <div class="form_tp_clr">
-                          <div class="clr_btn" @click="toggleDropdownP(indx, index)" :style="{background: product.color}" ref="dropdownP"></div>
-                          <div class="plt_clr" v-if="product.showDropdown">
-                            <div v-if="product.color">
-                              <color-picker
-                                  :width="240"
-                                  :height="240"
-                                  :start-color="product.color"
-                                  v-model="product.color"
-                                  :style="{background: product.color, borderRadius: '50%'}"
-                              >
-                              </color-picker>
-                            </div>
-                            <div v-else>
-                              <color-picker
-                                  :width="240"
-                                  :height="240"
-                                  start-color="#ffffff"
-                                  v-model="product.color"
-                                  :style="{background: product.color, borderRadius: '50%'}"
-                              >
-                              </color-picker>
-                            </div>
-                          </div>
                         </div>
                       </div>
 
@@ -229,7 +190,9 @@ export default {
       },
       err: {},
       general_type_products: [],
+      basic_type_products: [],
       general_products: [],
+      basic_products: [],
       type_counts: [],
       showDropdownPL: false,
     }
@@ -350,6 +313,20 @@ export default {
       if (generalTypeProduct) {
         productType.color = await generalTypeProduct.color;
       }
+
+      if (productType.name) {
+        await this.$axios.get('/general-products-by-name/get/' + productType.name)
+          .then((res) => {
+            this.general_products = res.data.data
+          })
+          .catch(err => console.log(err))
+      } else {
+        await this.$axios.get('/general-products/get/')
+          .then((res) => {
+            this.general_products = res.data.data.data
+          })
+          .catch(err => console.log(err))
+      }
     },
     async changeDefaultProductColor(product) {
       const generalProduct = this.general_products.find(
@@ -358,6 +335,22 @@ export default {
       if (generalProduct) {
         product.color = await generalProduct.color;
       }
+    },
+    async fetchBasicTypeProducts() {
+      await this.$axios.get('/basic-type-products/get')
+        .then((res) => {
+          this.basic_type_products = res.data.data
+          this.general_type_products = this.general_type_products.concat(this.basic_type_products)
+        })
+        .catch(err => console.log(err))
+    },
+    async fetchBasicProducts() {
+      await this.$axios.get('/basic-products/get')
+        .then((res) => {
+          this.basic_products = res.data.data
+          this.general_products = this.general_products.concat(this.basic_products)
+        })
+        .catch(err => console.log(err))
     },
     toggleDropdownPL() {
       this.showDropdownPL = !this.showDropdownPL;
@@ -378,6 +371,8 @@ export default {
     this.fetchGeneralTypeProducts()
     this.fetchGeneralProduct()
     this.fetchTypeCounts()
+    this.fetchBasicTypeProducts()
+    this.fetchBasicProducts()
   }
 }
 </script>

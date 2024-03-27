@@ -7,7 +7,6 @@
           <el-form-item prop="name" class="w-3/5">
             <el-input placeholder="Name" type="name" v-model="form.name"></el-input>
             <span class="is_invalid" v-if="err.name"> {{ err.name[0] }}</span>
-            <color-picker start-color="#ffffff" :width="240" :height="240" v-model="form.color" :style="{background: form.color}"></color-picker>
           </el-form-item>
 
           <el-select
@@ -54,6 +53,7 @@ export default {
       },
       err: {},
       general_type_products: [],
+      basic_type_products: [],
     }
   },
   methods: {
@@ -74,9 +74,18 @@ export default {
           })
           .catch(err => console.log(err))
     },
+    async fetchBasicTypeProducts() {
+      await this.$axios.get('/basic-type-products/get')
+        .then((res) => {
+          this.basic_type_products = res.data.data
+          this.general_type_products = this.general_type_products.concat(this.basic_type_products)
+        })
+        .catch(err => console.log(err))
+    },
   },
   mounted() {
     this.fetchGeneralTypeProducts()
+    this.fetchBasicTypeProducts()
   }
 }
 </script>

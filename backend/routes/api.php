@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\BasicProductsController;
 use App\Http\Controllers\GeneralProductController;
 use App\Http\Controllers\GeneralTypeProductController;
 use App\Http\Controllers\GenerateProductListController;
@@ -71,6 +72,9 @@ Route::group(['middleware' => 'jwt.auth'], static function () {
 
     //GetSomeEntities
     Route::get('/type-counts/get', [HelpController::class, 'getTypeCounts']);
+    Route::get('/basic-products/get', [HelpController::class, 'getBasicProducts']);
+    Route::get('/basic-type-products/get', [HelpController::class, 'getBasicTypeProducts']);
     //Generate Product List
     Route::post('/product-list/generate', [GenerateProductListController::class, 'generate']);
 });
+

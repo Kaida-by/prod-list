@@ -21,6 +21,8 @@ class DatabaseSeeder extends Seeder
             TypeProductSeeder::class,
             TypeCountSeeder::class,
             ProductSeeder::class,
+            BasicTypeProductsSeeder::class,
+            BasicProductsSeeder::class,
         ]);
 
         $generalProducts = Product::all(['id', 'name', 'color', 'user_id'])->toArray();
