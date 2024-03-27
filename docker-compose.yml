@@ -69,13 +69,11 @@ services:
       - "3307:3306"
     environment:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_ALLOW_EMPTY_PASSWORD: 1
       SERVICE_TAGS: dev
       SERVICE_NAME: prod_list_mysql
     volumes:
-      - dbdata:/var/lib/mysql
+      - dbdata:/var/lib/mysqlî
       - ./docker/mysql/my.cnf:/etc/mysql/my.cnf
     networks:
       - app-network

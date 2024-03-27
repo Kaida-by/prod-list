@@ -217,11 +217,11 @@ export default {
       }
     },
     async fetchGeneralTypeProducts() {
-      await this.$axios.get('/general-type-products/get')
-          .then((res) => {
-            this.general_type_products = res.data.data.data
-          })
-          .catch(err => console.log(err))
+      // await this.$axios.get('/general-type-products/get')
+      //     .then((res) => {
+      //       this.general_type_products = res.data.data.data
+      //     })
+      //     .catch(err => console.log(err))
     },
     async fetchGeneralProduct() {
       await this.$axios.get('/general-products/get')
@@ -312,6 +312,11 @@ export default {
       this.form.typeProducts[indexTP].products[index].showDropdown = !this.form.typeProducts[indexTP].products[index].showDropdown;
     },
     async fetchBasicTypeProducts() {
+      await this.$axios.get('/general-type-products/get')
+        .then((res) => {
+          this.general_type_products = res.data.data.data
+        })
+        .catch(err => console.log(err))
       await this.$axios.get('/basic-type-products/get')
         .then((res) => {
           this.basic_type_products = res.data.data

@@ -12,7 +12,7 @@
             placeholder="Выберите продукт"
             no-data-text="Ничего :("
             class="w-full"
-            @change="updateProductColor()"
+            @change="updateProductColor(productType)"
         >
           <el-option
               v-for="general_product in generalProducts"
@@ -75,7 +75,8 @@ export default {
     'generalProducts',
     'typeCounts',
     'typeProductKey',
-    'productKey'
+    'productKey',
+    'productType',
   ],
   data() {
     return {
@@ -93,12 +94,14 @@ export default {
 
       this.product.showClass = false;
     },
-    updateProductColor() {
+    updateProductColor(productType) {
+      console.log(productType);
       const generalProduct = this.generalProducts.find(product => product.name === this.product.name);
       if (generalProduct) {
         this.product.color = generalProduct.color;
         this.product.type_count_id = 1;
       }
+      this.closeOtherProducts();
     },
     openProductOptions() {
       this.showProductOptionsWindow = !this.showProductOptionsWindow;
@@ -108,6 +111,9 @@ export default {
         this.showProductOptionsWindow = false;
       }
     },
+    closeOtherProducts() {
+      console.log(123);
+    }
   },
   mounted() {
     document.addEventListener('click', this.handleGlobalClick);

@@ -44,6 +44,7 @@
               :product="product"
               :generalProducts="generalProducts"
               :typeCounts="typeCounts"
+              :productType="productType"
               @addInputProduct="addInputProduct"
               @removeInputProduct="removeInputProduct"
             />
